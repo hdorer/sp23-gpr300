@@ -8,25 +8,27 @@ void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
 
 //TODO: Vertex shader source code
 const char* vertexShaderSource =
-"#version 450															\n"
-"layout (location = 0) in vec3 vPos;									\n"
-"layout (location = 1) in vec3 vColor;									\n"
-"out vec3 Color;														\n"
-"uniform float iTime;													\n"
-"void main() {															\n"
-"	Color = vColor;														\n"
-"	gl_Position = vec4(vPos.x, vPos.y + sin(iTime) / 4, vPos.z, 1.0);	\n"
-"}																		\0";
+"#version 450											\n"
+"layout (location = 0) in vec3 vPos;					\n"
+"layout (location = 1) in vec3 vColor;					\n"
+"layout (location = 2) in float direction;				\n"
+"out vec3 Color;										\n"
+"uniform float iTime;									\n"
+"void main() {											\n"
+"	Color = vColor;										\n"
+"	float yValue = vPos.y + (sin(iTime) / 4);			\n"
+"	gl_Position = vec4(vPos.x, yValue, vPos.z, 1.0);	\n"
+"}														\0";
 
 //TODO: Fragment shader source code
 const char* fragmentShaderSource =
-"#version 450															\n"
-"out vec4 FragColor;													\n"
-"in vec3 Color;															\n"
-"uniform float iTime;													\n"
-"void main() {															\n"
-"	FragColor = vec4(abs(sin(iTime)) * Color, 1.0);						\n"
-"}																		\0";
+"#version 450											\n"
+"out vec4 FragColor;									\n"
+"in vec3 Color;											\n"
+"uniform float iTime;									\n"
+"void main() {											\n"
+"	FragColor = vec4(abs(sin(iTime)) * Color, 1.0);		\n"
+"}														\0";
 
 struct Vec3 {
 	float x, y, z;
@@ -39,16 +41,19 @@ struct Color {
 struct Vertex {
 	Vec3 position;
 	Color color;
+	float direction;
 };
 
 //TODO: Vertex data array
 const Vertex vertexData[] = {
-	Vertex{ Vec3{ -0.5, 0.5, 0.0 }, Color{ 1.0, 0.0, 0.0, 1.0 } },
-	Vertex{ Vec3{ -0.5, -0.5, 0.0 }, Color{ 0.0, 1.0, 0.0, 1.0 } },
-	Vertex{ Vec3{ 0.0, 0.0, 0.0 }, Color{ 0.0, 0.0, 1.0, 1.0 } },
-	Vertex{ Vec3{ 0.5, 0.5, 0.0 }, Color{ 1.0, 0.0, 0.0, 1.0 } },
-	Vertex{ Vec3{ 0.0, 0.0, 0.0 }, Color{ 0.0, 1.0, 0.0, 1.0 } },
-	Vertex{ Vec3{ 0.5, -0.5, 0.0 }, Color{ 0.0, 0.0, 1.0, 1.0 } }
+	// triangle 1
+	Vertex{ Vec3{ -0.5, 0.5, 0.0 }, Color{ 1.0, 0.0, 0.0, 1.0 }, 1 },
+	Vertex{ Vec3{ -0.5, -0.5, 0.0 }, Color{ 0.0, 1.0, 0.0, 1.0 }, 1 },
+	Vertex{ Vec3{ 0.0, 0.0, 0.0 }, Color{ 0.0, 0.0, 1.0, 1.0 }, 1 },
+	// triangle 2
+	Vertex{ Vec3{ 0.5, 0.5, 0.0 }, Color{ 1.0, 0.0, 0.0, 1.0 }, -1 },
+	Vertex{ Vec3{ 0.0, 0.0, 0.0 }, Color{ 0.0, 1.0, 0.0, 1.0 }, -1 },
+	Vertex{ Vec3{ 0.5, -0.5, 0.0 }, Color{ 0.0, 0.0, 1.0, 1.0 }, -1 }
 };
 
 int main() {
@@ -132,8 +137,12 @@ int main() {
 	glEnableVertexAttribArray(0);
 
 	// Define vertex attribute layout (color (rgba))
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, position)));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, color)));
 	glEnableVertexAttribArray(1);
+
+	// Define vertex attribute layer (direction)
+	glVertexAttribPointer(2, 1, GL_INT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, direction)));
+	glEnableVertexAttribArray(2);
 
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.2f, 0.3f, 0.6f, 1.0f);
