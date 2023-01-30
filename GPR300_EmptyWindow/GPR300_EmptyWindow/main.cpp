@@ -41,19 +41,18 @@ struct Color {
 struct Vertex {
 	Vec3 position;
 	Color color;
-	float direction;
 };
 
 //TODO: Vertex data array
 const Vertex vertexData[] = {
 	// triangle 1
-	Vertex{ Vec3{ -0.5, 0.5, 0.0 }, Color{ 1.0, 0.0, 0.0, 1.0 }, 1 },
-	Vertex{ Vec3{ -0.5, -0.5, 0.0 }, Color{ 0.0, 1.0, 0.0, 1.0 }, 1 },
-	Vertex{ Vec3{ 0.0, 0.0, 0.0 }, Color{ 0.0, 0.0, 1.0, 1.0 }, 1 },
+	Vertex{ Vec3{ -0.5, 0.5, 0.0 }, Color{ 1.0, 0.0, 0.0, 1.0 } },
+	Vertex{ Vec3{ -0.5, -0.5, 0.0 }, Color{ 0.0, 1.0, 0.0, 1.0 } },
+	Vertex{ Vec3{ 0.0, 0.0, 0.0 }, Color{ 0.0, 0.0, 1.0, 1.0 } },
 	// triangle 2
-	Vertex{ Vec3{ 0.5, 0.5, 0.0 }, Color{ 1.0, 0.0, 0.0, 1.0 }, -1 },
-	Vertex{ Vec3{ 0.0, 0.0, 0.0 }, Color{ 0.0, 1.0, 0.0, 1.0 }, -1 },
-	Vertex{ Vec3{ 0.5, -0.5, 0.0 }, Color{ 0.0, 0.0, 1.0, 1.0 }, -1 }
+	Vertex{ Vec3{ 0.5, 0.5, 0.0 }, Color{ 1.0, 0.0, 0.0, 1.0 } },
+	Vertex{ Vec3{ 0.0, 0.0, 0.0 }, Color{ 0.0, 1.0, 0.0, 1.0 } },
+	Vertex{ Vec3{ 0.5, -0.5, 0.0 }, Color{ 0.0, 0.0, 1.0, 1.0 } }
 };
 
 int main() {
@@ -71,7 +70,6 @@ int main() {
 	}
 
 	glfwSetFramebufferSizeCallback(window, resizeFrameBufferCallback);
-
 
 	//TODO: Create and compile vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -139,10 +137,6 @@ int main() {
 	// Define vertex attribute layout (color (rgba))
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, color)));
 	glEnableVertexAttribArray(1);
-
-	// Define vertex attribute layer (direction)
-	glVertexAttribPointer(2, 1, GL_INT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, direction)));
-	glEnableVertexAttribArray(2);
 
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.2f, 0.3f, 0.6f, 1.0f);
