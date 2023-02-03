@@ -100,6 +100,10 @@ int main() {
 
 		//Draw
 		shader.use();
+		shader.setFloat("_Time", time);
+
+		glm::mat4 modelMatrix = glm::mat4(1);
+		shader.setMat4("_Model", modelMatrix);
 
 		cubeMesh.draw();
 
