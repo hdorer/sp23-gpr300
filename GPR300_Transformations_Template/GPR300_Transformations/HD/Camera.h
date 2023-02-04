@@ -4,13 +4,17 @@
 
 class Camera {
 	public:
-		glm::mat4 getProjectionMatrix();
-		glm::mat4 getViewMatrix();
+		Camera();
 
+		glm::vec3 getPosition();
+		
 		void setPosition(glm::vec3 position);
 		void setPosition(float x, float y, float z);
 		void setTarget(glm::vec3 target);
 		void setTarget(float x, float y, float z);
+
+		glm::mat4 getProjectionMatrix();
+		glm::mat4 getViewMatrix();
 	private:
 		float fov;
 		bool orthographic;

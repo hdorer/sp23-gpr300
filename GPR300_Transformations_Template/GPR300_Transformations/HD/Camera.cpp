@@ -1,5 +1,17 @@
 #include "Camera.h"
 
+Camera::Camera() {
+	fov = 90;
+	orthographic = false;
+	orthographicSize = 5;
+	nearPlane = 0.5;
+	farPlane = 10;
+}
+
+glm::vec3 Camera::getPosition() {
+	return position;
+}
+
 glm::mat4 Camera::getProjectionMatrix() {
 	if (orthographic) {
 		return ortho(orthographicSize, 16 / 9, nearPlane, farPlane);

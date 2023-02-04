@@ -110,9 +110,13 @@ int main() {
 		shader.use();
 		shader.setFloat("_Time", time);
 
-		shader.setMat4("_Model", transform.getModelMatrix());
+		/*shader.setMat4("_Model", transform.getModelMatrix());
 		shader.setMat4("_View", camera.getViewMatrix());
-		shader.setMat4("_Projection", camera.getProjectionMatrix());
+		shader.setMat4("_Projection", camera.getProjectionMatrix());*/
+
+		shader.setMat4("_Model", transform.getModelMatrix());
+		shader.setMat4("_View", glm::lookAt(camera.getPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+		shader.setMat4("_Projection", glm::perspective<float>(90, 16 / 9, 0, 20));
 
 		cubeMesh.draw();
 
