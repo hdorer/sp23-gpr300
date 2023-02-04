@@ -17,8 +17,8 @@ glm::mat4 Camera::getTranslationMatrix() {
 	);
 }
 
-glm::mat4 Camera::getViewMatrix(glm::vec3 targetPos) {
-	return lookAt(targetPos, position, glm::vec3(0, 1, 0)) * getTranslationMatrix();
+glm::mat4 Camera::getViewMatrix() {
+	return lookAt(target, position, glm::vec3(0, 1, 0)) * getTranslationMatrix();
 }
 
 glm::mat4 Camera::lookAt(glm::vec3 targetPos, glm::vec3 cameraPos, glm::vec3 worldUp) {
@@ -59,4 +59,20 @@ glm::mat4 Camera::perspective(float fov, float aspectRatio, float nearPlane, flo
 		0, 0, -((farPlane + nearPlane) / (farPlane - nearPlane)), -1,
 		0, 0, -((2 * farPlane * nearPlane) / (farPlane - nearPlane)), 1
 	);
+}
+
+void Camera::setPosition(glm::vec3 position) {
+	this->position = position;
+}
+
+void Camera::setPosition(float x, float y, float z) {
+	position = glm::vec3(x, y, z);
+}
+
+void Camera::setTarget(glm::vec3 target) {
+	this->target = target;
+}
+
+void Camera::setTarget(float x, float y, float z) {
+	target = glm::vec3(x, y, z);
 }

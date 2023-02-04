@@ -5,7 +5,12 @@
 class Camera {
 	public:
 		glm::mat4 getProjectionMatrix();
-		glm::mat4 getViewMatrix(glm::vec3 targetPos);
+		glm::mat4 getViewMatrix();
+
+		void setPosition(glm::vec3 position);
+		void setPosition(float x, float y, float z);
+		void setTarget(glm::vec3 target);
+		void setTarget(float x, float y, float z);
 	private:
 		float fov;
 		bool orthographic;
