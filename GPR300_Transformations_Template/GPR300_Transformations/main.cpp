@@ -18,6 +18,9 @@
 #include "EW/Shader.h"
 #include "EW/ShapeGen.h"
 
+#include "HD/Camera.h"
+#include "HD/Transform.h"
+
 void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
 void keyboardCallback(GLFWwindow* window, int keycode, int scancode, int action, int mods);
 
@@ -86,6 +89,11 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
+	Transform transform;
+	
+	Camera camera;
+	camera.setPosition(5, 5, 0);
+
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(bgColor.r,bgColor.g,bgColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -102,8 +110,9 @@ int main() {
 		shader.use();
 		shader.setFloat("_Time", time);
 
-		glm::mat4 modelMatrix = glm::mat4(1);
-		shader.setMat4("_Model", modelMatrix);
+		shader.setMat4("_Model", transform.getModelMatrix());
+		shader.setMat4("_View", camera.getViewMatrix());
+		shader.setMat4("_Projection", camera.getProjectionMatrix());
 
 		cubeMesh.draw();
 
