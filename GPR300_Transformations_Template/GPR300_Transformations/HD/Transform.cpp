@@ -1,7 +1,7 @@
 #include "Transform.h"
 
 glm::mat4 Transform::getModelMatrix() {
-	return getTranslationMatrix() * getRotationMatrix() * getScaleMatrix();
+	return glm::mat4(1) * getTranslationMatrix() * getRotationMatrix() * getScaleMatrix();
 }
 
 glm::mat4 Transform::getRotationMatrix() {
