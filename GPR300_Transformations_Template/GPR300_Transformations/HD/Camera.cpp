@@ -4,8 +4,12 @@ Camera::Camera() {
 	fov = 90;
 	orthographic = false;
 	orthographicSize = 5;
+	
 	nearPlane = 0.5;
 	farPlane = 10;
+
+	position = glm::vec3(0);
+	target = glm::vec3(0);
 }
 
 glm::vec3 Camera::getPosition() {
