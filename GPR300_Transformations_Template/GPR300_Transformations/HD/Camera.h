@@ -13,7 +13,7 @@ class Camera {
 		void setTarget(glm::vec3 target);
 		void setTarget(float x, float y, float z);
 
-		glm::mat4 getProjectionMatrix();
+		glm::mat4 getProjectionMatrix(float screenWidth, float screenHeight);
 		glm::mat4 getViewMatrix();
 	private:
 		float fov;

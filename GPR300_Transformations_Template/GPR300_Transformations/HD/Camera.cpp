@@ -12,12 +12,9 @@ glm::vec3 Camera::getPosition() {
 	return position;
 }
 
-glm::mat4 Camera::getProjectionMatrix() {
-	if (orthographic) {
-		return ortho(orthographicSize, 16 / 9, nearPlane, farPlane);
-	} else {
-		return perspective(fov, 16 / 9, nearPlane, farPlane);
-	}
+glm::mat4 Camera::getProjectionMatrix(float screenWidth, float screenHeight) {
+	float aspectRatio = screenWidth / screenHeight;
+	return orthographic ? ortho(orthographicSize, aspectRatio, nearPlane, farPlane) : perspective(fov, aspectRatio, nearPlane, farPlane);
 }
 
 glm::mat4 Camera::getTranslationMatrix() {
