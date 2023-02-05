@@ -111,8 +111,8 @@ int main() {
 		shader.setFloat("_Time", time);
 
 		shader.setMat4("_Model", transform.getModelMatrix());
-		shader.setMat4("_View", glm::lookAt(glm::vec3(0, 0, -1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
-		shader.setMat4("_Projection", glm::perspective<float>(90, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 100));
+		shader.setMat4("_View", camera.getViewMatrix());
+		shader.setMat4("_Projection", camera.getProjectionMatrix(SCREEN_WIDTH, SCREEN_HEIGHT));
 
 		cubeMesh.draw();
 
