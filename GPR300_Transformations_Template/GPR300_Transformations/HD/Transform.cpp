@@ -46,3 +46,9 @@ glm::mat4 Transform::getTranslationMatrix() {
 		position.x, position.y, position.z, 1
 	);
 }
+
+Transform::Transform() {
+	position = glm::vec3(0);
+	rotation = glm::vec3(0);
+	scale = glm::vec3(1);
+}

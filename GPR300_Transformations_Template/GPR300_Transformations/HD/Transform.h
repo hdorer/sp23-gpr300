@@ -4,6 +4,8 @@
 
 class Transform {
 	public:
+		Transform();
+		
 		glm::mat4 getModelMatrix();
 	private:
 		glm::vec3 position;
