@@ -92,7 +92,7 @@ int main() {
 	Transform transform;
 	
 	Camera camera;
-	camera.setPosition(5, 5, 0);
+	camera.setPosition(0, 0, 10);
 
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(bgColor.r,bgColor.g,bgColor.b, 1.0f);
@@ -110,13 +110,9 @@ int main() {
 		shader.use();
 		shader.setFloat("_Time", time);
 
-		/*shader.setMat4("_Model", transform.getModelMatrix());
-		shader.setMat4("_View", camera.getViewMatrix());
-		shader.setMat4("_Projection", camera.getProjectionMatrix());*/
-
-		shader.setMat4("_Model", transform.getModelMatrix());
-		shader.setMat4("_View", glm::lookAt(camera.getPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
-		shader.setMat4("_Projection", glm::perspective<float>(90, 16 / 9, 0, 20));
+		shader.setMat4("_Model", glm::mat4(1));
+		shader.setMat4("_View", glm::lookAt(glm::vec3(0, 0, -1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+		shader.setMat4("_Projection", glm::perspective<float>(90, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 100));
 
 		cubeMesh.draw();
 
