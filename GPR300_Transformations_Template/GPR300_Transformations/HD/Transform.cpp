@@ -14,23 +14,27 @@ glm::vec3 Transform::getRotation() {
 }
 
 glm::mat4 Transform::getRotationMatrix() {
+	float xRad = glm::radians(rotation.x);
+	float yRad = glm::radians(rotation.y);
+	float zRad = glm::radians(rotation.z);
+
 	glm::mat4 xRotation = glm::mat4(
 		1, 0, 0, 0,
-		0, cos(rotation.x), sin(rotation.x), 0,
-		0, -sin(rotation.x), cos(rotation.x), 0,
+		0, cos(xRad), sin(xRad), 0,
+		0, -sin(xRad), cos(xRad), 0,
 		0, 0, 0, 1
 	);
 
 	glm::mat4 yRotation = glm::mat4(
-		cos(rotation.y), 0, -sin(rotation.y), 0,
+		cos(yRad), 0, -sin(yRad), 0,
 		0, 1, 0, 0,
-		sin(rotation.y), 0, cos(rotation.y), 0,
+		sin(yRad), 0, cos(yRad), 0,
 		0, 0, 0, 1
 	);
 
 	glm::mat4 zRotation = glm::mat4(
-		cos(rotation.z), sin(rotation.z), 0, 0,
-		-sin(rotation.z), cos(rotation.z), 0, 0,
+		cos(zRad), sin(zRad), 0, 0,
+		-sin(zRad), cos(zRad), 0, 0,
 		0, 0, 1, 0,
 		0, 0, 0, 1
 	);
