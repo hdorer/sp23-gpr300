@@ -1,15 +1,26 @@
 #include "Camera.h"
 
+#include "../imgui/imgui.h"
+
 Camera::Camera() {
 	fov = 90;
 	orthographic = false;
-	orthographicSize = 5;
+	orthographicSize = 10;
 	
 	nearPlane = 0.5;
 	farPlane = 10;
 
 	position = glm::vec3(0);
 	target = glm::vec3(0);
+}
+
+void Camera::drawGUI() {
+	ImGui::Checkbox("Orthographic", &orthographic);
+	if(orthographic) {
+		ImGui::SliderFloat("Orthographic Size", &orthographicSize, 1, 20);
+	} else {
+		ImGui::SliderFloat("FOV", &fov, 30, 150);
+	}
 }
 
 float Camera::getFarPlane() {
