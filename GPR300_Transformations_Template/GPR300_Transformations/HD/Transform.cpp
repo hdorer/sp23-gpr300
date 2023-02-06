@@ -4,6 +4,15 @@ glm::mat4 Transform::getModelMatrix() {
 	return glm::mat4(1) * getTranslationMatrix() * getRotationMatrix() * getScaleMatrix();
 }
 
+glm::vec3 Transform::getPosition() {
+	return position;
+}
+
+
+glm::vec3 Transform::getRotation() {
+	return rotation;
+}
+
 glm::mat4 Transform::getRotationMatrix() {
 	glm::mat4 xRotation = glm::mat4(
 		1, 0, 0, 0,
@@ -29,6 +38,10 @@ glm::mat4 Transform::getRotationMatrix() {
 	return xRotation * yRotation * zRotation;
 }
 
+glm::vec3 Transform::getScale() {
+	return scale;
+}
+
 glm::mat4 Transform::getScaleMatrix() {
 	return glm::mat4(
 		scale.x, 0, 0, 0,
@@ -45,6 +58,34 @@ glm::mat4 Transform::getTranslationMatrix() {
 		0, 0, 1, 0,
 		position.x, position.y, position.z, 1
 	);
+}
+
+void Transform::setPosition(glm::vec3 position) {
+	this->position = position;
+}
+
+void Transform::setPosition(float x, float y, float z) {
+	position = glm::vec3(x, y, z);
+}
+
+void Transform::setRotation(glm::vec3 rotation) {
+	this->rotation = rotation;
+}
+
+void Transform::setRotation(float x, float y, float z) {
+	rotation = glm::vec3(x, y, z);
+}
+
+void Transform::setScale(glm::vec3 scale) {
+	this->scale = scale;
+}
+
+void Transform::setScale(float x, float y, float z) {
+	scale = glm::vec3(x, y, z);
+}
+
+void Transform::setScale(float scaleFactor) {
+	scale = glm::vec3(scaleFactor);
 }
 
 Transform::Transform() {

@@ -90,6 +90,8 @@ int main() {
 	glDepthFunc(GL_LESS);
 
 	Transform transform;
+	transform.setRotation(0, 50, 0);
+	transform.setScale(5);
 	
 	Camera camera;
 	camera.setPosition(0, 0, 10);
