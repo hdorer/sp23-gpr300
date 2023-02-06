@@ -90,15 +90,22 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	Transform transform;
-	transform.setRotation(0, 50, 0);
-	transform.setScale(5);
-	
-	Camera camera;
-	camera.setPosition(0, 0, 10);
+	Random random;
 
-	while (!glfwWindowShouldClose(window)) {
-		glClearColor(bgColor.r,bgColor.g,bgColor.b, 1.0f);
+	const int NUM_CUBES = 5;
+	Transform cubes[NUM_CUBES];
+	for(int i = 0; i < NUM_CUBES; i++) {
+		cubes[i].setPosition(random.RandomFloat(-2, 2), random.RandomInt(-2, 2), random.RandomFloat(-2, 2));
+		cubes[i].setRotation(random.RandomFloat(0, 359), random.RandomFloat(0, 359), random.RandomFloat(0, 359));
+		cubes[i].setScale(random.RandomFloat(1, 2));
+	}
+
+	Camera camera;
+	camera.setPosition(0, 5, 5);
+	camera.setFarPlane(200);
+
+	while(!glfwWindowShouldClose(window)) {
+		glClearColor(bgColor.r, bgColor.g, bgColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ImGui_ImplOpenGL3_NewFrame();
@@ -113,11 +120,13 @@ int main() {
 		shader.use();
 		shader.setFloat("_Time", time);
 
-		shader.setMat4("_Model", transform.getModelMatrix());
 		shader.setMat4("_View", camera.getViewMatrix());
 		shader.setMat4("_Projection", camera.getProjectionMatrix(SCREEN_WIDTH, SCREEN_HEIGHT));
 
-		cubeMesh.draw();
+		for(int i = 0; i < NUM_CUBES; i++) {
+			shader.setMat4("_Model", cubes[i].getModelMatrix());
+			cubeMesh.draw();
+		}
 
 		//Draw UI
 		ImGui::Begin("Settings");
