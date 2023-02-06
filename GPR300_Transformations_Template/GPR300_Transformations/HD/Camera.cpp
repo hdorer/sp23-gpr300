@@ -64,7 +64,9 @@ glm::mat4 Camera::ortho(float height, float aspectRatio, float nearPlane, float 
 }
 
 glm::mat4 Camera::perspective(float fov, float aspectRatio, float nearPlane, float farPlane) {
-	float c = tan(fov / 2);
+	float fovRad = glm::radians(fov);
+
+	float c = tan(fovRad / 2);
 	
 	return glm::mat4(
 		1 / (aspectRatio * c), 0, 0, 0,
