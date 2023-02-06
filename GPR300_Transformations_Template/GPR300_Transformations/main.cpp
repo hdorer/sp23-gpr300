@@ -19,6 +19,7 @@
 #include "EW/ShapeGen.h"
 
 #include "HD/Camera.h"
+#include "HD/Cube.h"
 #include "HD/Random.h"
 #include "HD/Transform.h"
 
@@ -92,11 +93,11 @@ int main() {
 	Random random;
 
 	const int NUM_CUBES = 5;
-	Transform cubes[NUM_CUBES];
+	Cube cubes[NUM_CUBES];
 	for(int i = 0; i < NUM_CUBES; i++) {
-		cubes[i].setPosition(random.RandomFloat(-2, 2), random.RandomInt(-2, 2), random.RandomFloat(-2, 2));
-		cubes[i].setRotation(random.RandomFloat(0, 359), random.RandomFloat(0, 359), random.RandomFloat(0, 359));
-		cubes[i].setScale(random.RandomFloat(1, 2));
+		cubes[i].getTransform()->setPosition(random.RandomFloat(-2, 2), random.RandomInt(-2, 2), random.RandomFloat(-2, 2));
+		cubes[i].getTransform()->setRotation(random.RandomFloat(0, 359), random.RandomFloat(0, 359), random.RandomFloat(0, 359));
+		cubes[i].getTransform()->setScale(random.RandomFloat(1, 2));
 	}
 
 	Camera camera;
@@ -123,7 +124,7 @@ int main() {
 		shader.setMat4("_Projection", camera.getProjectionMatrix(SCREEN_WIDTH, SCREEN_HEIGHT));
 
 		for(int i = 0; i < NUM_CUBES; i++) {
-			shader.setMat4("_Model", cubes[i].getModelMatrix());
+			shader.setMat4("_Model", cubes[i].getTransform()->getModelMatrix());
 			cubeMesh.draw();
 		}
 
