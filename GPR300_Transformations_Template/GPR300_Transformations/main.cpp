@@ -96,6 +96,7 @@ int main() {
 	Camera camera;
 	camera.setPosition(0, 0, 10);
 	camera.setOrthographic(true);
+	camera.setOrthographicSize(10);
 
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(bgColor.r,bgColor.g,bgColor.b, 1.0f);

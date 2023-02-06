@@ -72,7 +72,7 @@ glm::mat4 Camera::lookAt(glm::vec3 targetPos, glm::vec3 cameraPos, glm::vec3 wor
 }
 
 glm::mat4 Camera::ortho(float height, float aspectRatio, float nearPlane, float farPlane) {
-	float width = fov * aspectRatio;
+	float width = height * aspectRatio;
 
 	float rightBounds = width / 2;
 	float topBounds = height / 2;
