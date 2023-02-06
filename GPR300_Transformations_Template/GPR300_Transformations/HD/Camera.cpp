@@ -12,6 +12,26 @@ Camera::Camera() {
 	target = glm::vec3(0);
 }
 
+float Camera::getFarPlane() {
+	return farPlane;
+}
+
+float Camera::getFov() {
+	return fov;
+}
+
+bool Camera::getOrthographic() {
+	return orthographic;
+}
+
+float Camera::getOrthographicSize() {
+	return orthographicSize;
+}
+
+float Camera::getNearPlane() {
+	return nearPlane;
+}
+
 glm::vec3 Camera::getPosition() {
 	return position;
 }
@@ -19,6 +39,10 @@ glm::vec3 Camera::getPosition() {
 glm::mat4 Camera::getProjectionMatrix(float screenWidth, float screenHeight) {
 	float aspectRatio = screenWidth / screenHeight;
 	return orthographic ? ortho(orthographicSize, aspectRatio, nearPlane, farPlane) : perspective(fov, aspectRatio, nearPlane, farPlane);
+}
+
+glm::vec3 Camera::getTarget() {
+	return target;
 }
 
 glm::mat4 Camera::getTranslationMatrix() {
@@ -74,6 +98,26 @@ glm::mat4 Camera::perspective(float fov, float aspectRatio, float nearPlane, flo
 		0, 0, -((farPlane + nearPlane) / (farPlane - nearPlane)), -1,
 		0, 0, -((2 * farPlane * nearPlane) / (farPlane - nearPlane)), 1
 	);
+}
+
+void Camera::setFarPlane(float farPlane) {
+	this->farPlane = farPlane;
+}
+
+void Camera::setFov(float fov) {
+	this->fov = fov;
+}
+
+void Camera::setNearPlane(float nearPlane) {
+	this->nearPlane = nearPlane;
+}
+
+void Camera::setOrthographic(bool orthographic) {
+	this->orthographic = orthographic;
+}
+
+void Camera::setOrthographicSize(float orthographicSize) {
+	this->orthographicSize = orthographicSize;
 }
 
 void Camera::setPosition(glm::vec3 position) {

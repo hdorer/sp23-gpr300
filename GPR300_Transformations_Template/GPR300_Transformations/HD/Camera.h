@@ -6,7 +6,22 @@ class Camera {
 	public:
 		Camera();
 
+		float getFov();
+		bool getOrthographic();
+		float getOrthographicSize();
+
+		float getNearPlane();
+		float getFarPlane();
+		
 		glm::vec3 getPosition();
+		glm::vec3 getTarget();
+
+		void setFov(float fov);
+		void setOrthographic(bool orthographic);
+		void setOrthographicSize(float orthographicSize);
+
+		void setNearPlane(float nearPlane);
+		void setFarPlane(float farPlane);
 		
 		void setPosition(glm::vec3 position);
 		void setPosition(float x, float y, float z);
