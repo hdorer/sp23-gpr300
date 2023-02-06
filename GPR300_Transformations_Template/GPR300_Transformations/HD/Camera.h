@@ -32,6 +32,7 @@ class Camera {
 		glm::mat4 getViewMatrix();
 
 		void drawGui();
+		void update(float deltaTime);
 	private:
 		float fov;
 		bool orthographic;
@@ -42,6 +43,10 @@ class Camera {
 		
 		glm::vec3 position;
 		glm::vec3 target;
+
+		float orbitRadius;
+		float orbitSpeed;
+		float orbitDegrees;
 		
 		glm::mat4 getTranslationMatrix();
 		glm::mat4 lookAt(glm::vec3 targetPos, glm::vec3 cameraPos, glm::vec3 up);

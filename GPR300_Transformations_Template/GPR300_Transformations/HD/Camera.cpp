@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "../imgui/imgui.h"
 
 Camera::Camera() {
@@ -12,6 +14,9 @@ Camera::Camera() {
 
 	position = glm::vec3(0);
 	target = glm::vec3(0);
+
+	orbitRadius = 5;
+	orbitSpeed = 10;
 }
 
 void Camera::drawGui() {
@@ -21,6 +26,10 @@ void Camera::drawGui() {
 	} else {
 		ImGui::SliderFloat("FOV", &fov, 30, 150);
 	}
+
+	ImGui::SliderFloat3("Target Position", glm::value_ptr(target), -10, 10);
+	ImGui::SliderFloat("Orbit Radius", &orbitRadius, 2, 10);
+	ImGui::SliderFloat("Orbit Speed", &orbitSpeed, 1, 50);
 }
 
 float Camera::getFarPlane() {
@@ -145,4 +154,20 @@ void Camera::setTarget(glm::vec3 target) {
 
 void Camera::setTarget(float x, float y, float z) {
 	target = glm::vec3(x, y, z);
+}
+
+void Camera::update(float deltaTime) {
+	if(orbitDegrees + orbitSpeed > 360) {
+		orbitDegrees -= 360;
+	}
+
+	orbitDegrees += orbitSpeed * deltaTime;
+
+	float orbitRadians = glm::radians(orbitDegrees);
+
+	glm::vec3 orbit = glm::vec3(0);
+	orbit.x = orbitRadius * sin(orbitRadians);
+	orbit.z = orbitRadius * cos(orbitRadians);
+
+	position = target + orbit;
 }

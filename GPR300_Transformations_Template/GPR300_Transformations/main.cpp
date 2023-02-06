@@ -43,7 +43,6 @@ const int MOUSE_TOGGLE_BUTTON = 1;
 const float MOUSE_SENSITIVITY = 0.1f;
 
 glm::vec3 bgColor = glm::vec3(0);
-float exampleSliderFloat = 0.0f;
 
 int main() {	
 	if (!glfwInit()) {
@@ -101,8 +100,6 @@ int main() {
 	}
 
 	Camera camera;
-	camera.setPosition(0, 5, 5);
-	camera.setFarPlane(200);
 
 	while(!glfwWindowShouldClose(window)) {
 		glClearColor(bgColor.r, bgColor.g, bgColor.b, 1.0f);
@@ -115,6 +112,8 @@ int main() {
 		float time = (float)glfwGetTime();
 		deltaTime = time - lastFrameTime;
 		lastFrameTime = time;
+
+		camera.update(deltaTime);
 
 		//Draw
 		shader.use();
@@ -135,6 +134,7 @@ int main() {
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		
 		glfwPollEvents();
 
 		glfwSwapBuffers(window);
