@@ -19,7 +19,9 @@
 #include "EW/ShapeGen.h"
 
 #include "HD/Camera.h"
+#include "HD/Random.h"
 #include "HD/Transform.h"
+#include <iostream>
 
 void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
 void keyboardCallback(GLFWwindow* window, int keycode, int scancode, int action, int mods);
@@ -45,6 +47,38 @@ glm::vec3 bgColor = glm::vec3(0);
 float exampleSliderFloat = 0.0f;
 
 int main() {
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl;
+	std::cout << Random::RandomInt(0, 100) << std::endl << std::endl;
+
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl;
+	std::cout << Random::RandomFloat(0, 100) << std::endl << std::endl;
+	
 	if (!glfwInit()) {
 		printf("glfw failed to init");
 		return 1;
@@ -120,7 +154,7 @@ int main() {
 
 		//Draw UI
 		ImGui::Begin("Settings");
-		camera.drawGUI();
+		camera.drawGui();
 		ImGui::End();
 
 		ImGui::Render();

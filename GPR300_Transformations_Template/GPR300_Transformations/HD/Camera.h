@@ -31,7 +31,7 @@ class Camera {
 		glm::mat4 getProjectionMatrix(float screenWidth, float screenHeight);
 		glm::mat4 getViewMatrix();
 
-		void drawGUI();
+		void drawGui();
 	private:
 		float fov;
 		bool orthographic;

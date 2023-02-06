@@ -155,6 +155,8 @@
   <ItemGroup>
     <ClInclude Include="EW\Mesh.h" />
     <ClInclude Include="HD\Camera.h" />
+    <ClInclude Include="HD\Cube.h" />
+    <ClInclude Include="HD\Random.h" />
     <ClInclude Include="HD\Transform.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />

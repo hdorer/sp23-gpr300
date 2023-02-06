@@ -95,5 +95,11 @@
     <ClInclude Include="HD\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HD\Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HD\Random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ Camera::Camera() {
 	target = glm::vec3(0);
 }
 
-void Camera::drawGUI() {
+void Camera::drawGui() {
 	ImGui::Checkbox("Orthographic", &orthographic);
 	if(orthographic) {
 		ImGui::SliderFloat("Orthographic Size", &orthographicSize, 1, 20);
