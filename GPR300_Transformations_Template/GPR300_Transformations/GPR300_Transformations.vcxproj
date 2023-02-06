@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="HD\Camera.cpp" />
+    <ClCompile Include="HD\Random.cpp" />
     <ClCompile Include="HD\Transform.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -155,7 +156,6 @@
   <ItemGroup>
     <ClInclude Include="EW\Mesh.h" />
     <ClInclude Include="HD\Camera.h" />
-    <ClInclude Include="HD\Cube.h" />
     <ClInclude Include="HD\Random.h" />
     <ClInclude Include="HD\Transform.h" />
     <ClInclude Include="imgui\imconfig.h" />
