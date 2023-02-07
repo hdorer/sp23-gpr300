@@ -100,6 +100,8 @@ int main() {
 		cubes[i].getTransform()->setScale(random.RandomFloat(1, 2));
 	}
 
+	Cube zeroCube;
+
 	Camera camera;
 
 	while(!glfwWindowShouldClose(window)) {
@@ -127,6 +129,9 @@ int main() {
 			shader.setMat4("_Model", cubes[i].getTransform()->getModelMatrix());
 			cubeMesh.draw();
 		}
+
+		shader.setMat4("_Model", zeroCube.getTransform()->getModelMatrix());
+		cubeMesh.draw();
 
 		//Draw UI
 		ImGui::Begin("Settings");

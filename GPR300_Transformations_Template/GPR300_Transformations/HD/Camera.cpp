@@ -10,13 +10,14 @@ Camera::Camera() {
 	orthographicSize = 10;
 	
 	nearPlane = 0.5;
-	farPlane = 10;
+	farPlane = 200;
 
 	position = glm::vec3(0);
 	target = glm::vec3(0);
 
 	orbitRadius = 5;
 	orbitSpeed = 10;
+	orbitDegrees = 0;
 }
 
 void Camera::drawGui() {
@@ -75,7 +76,7 @@ glm::mat4 Camera::getTranslationMatrix() {
 }
 
 glm::mat4 Camera::getViewMatrix() {
-	return lookAt(target, position, glm::vec3(0, 1, 0)) * getTranslationMatrix();
+	return lookAt(target, position, glm::vec3(0, 1, 0));
 }
 
 glm::mat4 Camera::lookAt(glm::vec3 targetPos, glm::vec3 cameraPos, glm::vec3 worldUp) {
@@ -88,7 +89,7 @@ glm::mat4 Camera::lookAt(glm::vec3 targetPos, glm::vec3 cameraPos, glm::vec3 wor
 		right.y, up.y, forward.y, 0,
 		right.z, up.z, forward.z, 0,
 		0, 0, 0, 1
-	);
+	) * getTranslationMatrix();
 }
 
 glm::mat4 Camera::ortho(float height, float aspectRatio, float nearPlane, float farPlane) {
