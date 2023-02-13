@@ -155,7 +155,12 @@ int main() {
 		litShader.use();
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());
 		litShader.setMat4("_View", camera.getViewMatrix());
-		litShader.setVec3("_LightPos", lightTransform.position);
+		// litShader.setVec3("_LightPos", lightTransform.position);
+
+		for (int i = 0; i < 4; i++) {
+			litShader.setVec3("_PointLights[" + std::to_string(i) + "].position", lightTransform.position);
+		}
+
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
 		cubeMesh.draw();
