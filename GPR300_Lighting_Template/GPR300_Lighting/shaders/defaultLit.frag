@@ -16,7 +16,7 @@ struct PointLight {
     vec3 position;
     vec3 color;
     float intensity;
-    float range;
+    float linearAttenuation;
 };
 
 struct DirectionalLight {
@@ -25,7 +25,15 @@ struct DirectionalLight {
     float intensity;
 };
 
-// struct SpotLight
+struct SpotLight {
+    vec3 position;
+    vec3 color;
+    vec3 direction;
+    float intensity;
+    float linearAttenuation;
+    float minAngle;
+    float maxAngle;
+};
 
 #define MAX_POINTLIGHTS 8
 
