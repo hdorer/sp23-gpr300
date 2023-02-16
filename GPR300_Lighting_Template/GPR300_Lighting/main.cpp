@@ -22,6 +22,8 @@
 #include "EW/Transform.h"
 #include "EW/ShapeGen.h"
 
+#include "HD/Lights.h"
+
 void processInput(GLFWwindow* window);
 void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
 void keyboardCallback(GLFWwindow* window, int keycode, int scancode, int action, int mods);
@@ -125,7 +127,7 @@ int main() {
 	ew::Transform sphereTransform;
 	ew::Transform planeTransform;
 	ew::Transform cylinderTransform;
-	ew::Transform lightTransform;
+	DirectionalLight dLight;
 
 	cubeTransform.position = glm::vec3(-2.0f, 0.0f, 0.0f);
 	sphereTransform.position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -135,8 +137,8 @@ int main() {
 
 	cylinderTransform.position = glm::vec3(2.0f, 0.0f, 0.0f);
 
-	lightTransform.scale = glm::vec3(0.5f);
-	lightTransform.position = glm::vec3(0.0f, 5.0f, 0.0f);
+	dLight.transform.scale = glm::vec3(0.5f);
+	dLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -155,11 +157,6 @@ int main() {
 		litShader.use();
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());
 		litShader.setMat4("_View", camera.getViewMatrix());
-		// litShader.setVec3("_LightPos", lightTransform.position);
-
-		for (int i = 0; i < 4; i++) {
-			litShader.setVec3("_PointLights[" + std::to_string(i) + "].position", lightTransform.position);
-		}
 
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
@@ -181,7 +178,7 @@ int main() {
 		unlitShader.use();
 		unlitShader.setMat4("_Projection", camera.getProjectionMatrix());
 		unlitShader.setMat4("_View", camera.getViewMatrix());
-		unlitShader.setMat4("_Model", lightTransform.getModelMatrix());
+		unlitShader.setMat4("_Model", dLight.transform.getModelMatrix());
 		unlitShader.setVec3("_Color", lightColor);
 		sphereMesh.draw();
 
@@ -189,7 +186,7 @@ int main() {
 		ImGui::Begin("Settings");
 
 		ImGui::ColorEdit3("Light Color", &lightColor.r);
-		ImGui::DragFloat3("Light Position", &lightTransform.position.x);
+		ImGui::DragFloat3("Light Position", &dLight.transform.position.x);
 		ImGui::End();
 
 		ImGui::Render();
