@@ -1,7 +1,4 @@
 #version 450                          
-out vec4 FragColor;
-
-in vec3 Normal;
 
 in struct Vertex {
     vec3 worldPosition;
@@ -20,6 +17,7 @@ struct PointLight {
 };
 
 struct DirectionalLight {
+    vec3 position;
     vec3 direction;
     vec3 color;
     float intensity;
@@ -34,6 +32,12 @@ struct SpotLight {
     float minAngle;
     float maxAngle;
 };
+
+out vec4 FragColor;
+
+in vec3 Normal;
+
+uniform vec3 cameraPosition;
 
 uniform DirectionalLight dLight;
 
@@ -59,6 +63,17 @@ void main(){
     float ambientLightLevel = 0.8;
     vec3 ambient = ambientLightLevel * dLight.color;
 
-    vec3 result = ambient * objectColor;
+    vec3 directionToLight = normalize(dLight.position - vs_out.worldPosition);
+    float diffuseAmount = max(dot(normal, directionToLight), 0.0);
+    vec3 diffuse = diffuseAmount * dLight.color;
+
+    float specularStrength = 0.8;
+    float shininess = 256;
+    vec3 viewDirection = normalize(cameraPosition - vs_out.worldPosition);
+    vec3 reflectDirection = reflect(-directionToLight, normal);
+    float specularAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), shininess);
+    vec3 specular = specularStrength * specularAmount * dLight.color;
+
+    vec3 result = (ambient + diffuse + specular) * objectColor;
     FragColor = vec4(result, 1.0);
 }
