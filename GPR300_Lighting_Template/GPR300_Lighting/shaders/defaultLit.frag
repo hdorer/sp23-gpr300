@@ -55,5 +55,10 @@ uniform Material material;
 void main(){         
     vec3 normal = normalize(vs_out.worldNormal);
     vec3 objectColor = abs(normal);
-    FragColor = vec4(objectColor, 1.0);
+
+    float ambientLightLevel = 0.8;
+    vec3 ambient = ambientLightLevel * dLight.color;
+
+    vec3 result = ambient * objectColor;
+    FragColor = vec4(result, 1.0);
 }

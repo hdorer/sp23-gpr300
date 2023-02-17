@@ -141,7 +141,7 @@ int main() {
 	dLight.transform.scale = glm::vec3(0.5f);
 	dLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 	dLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	dLight.color = glm::vec3(1.0, 0.0, 0.0);
+	dLight.color = glm::vec3(1.0, 0.0, 1.0);
 
 	material.ambientK = 1.0;
 
@@ -163,11 +163,11 @@ int main() {
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());
 		litShader.setMat4("_View", camera.getViewMatrix());
 		
-		/*litShader.setVec3("dLight.direction", dLight.transform.rotation);
+		litShader.setVec3("dLight.direction", dLight.transform.rotation);
 		litShader.setVec3("dLight.color", dLight.color);
 		litShader.setFloat("dLight.intensity", dLight.intensity);
 
-		litShader.setFloat("material.ambientK", material.ambientK);*/
+		//litShader.setFloat("material.ambientK", material.ambientK);
 
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
