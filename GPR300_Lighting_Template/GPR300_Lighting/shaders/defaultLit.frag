@@ -35,29 +35,25 @@ struct SpotLight {
     float maxAngle;
 };
 
-#define MAX_POINTLIGHTS 8
+uniform DirectionalLight dLight;
 
-uniform PointLight _PointLights[MAX_POINTLIGHTS];
-uniform Material _Material;
+uniform Material material;
 
-uniform int _NumPointLights = 4;
+//vec4 calcDirectionalLight(DirectionalLight light) {
+//    float diffuseAmount = material.ambientK * min(dot(light.direction, vs_out.worldNormal), 0) * light.intensity;
+//    vec3 diffuse = vec3(diffuseAmount * light.color.x, diffuseAmount * light.color.y, diffuseAmount * light.color.z);
+//
+//    float specularAmount = 1.0 - material.ambientK * 
+//
+//    return vec4(diffuse.x, diffuse.y, diffuse.z, 0.0);
+//}
 
-vec3 calcDiffuse(vec3 toLight, vec3 normal, vec3 lightColor) {
-    // return amount of diffuse light 
-    return vec3(0);
-}
-
-// vec3 calcSpecular
-
-vec3 calcDirectionalLight(DirectionalLight light) {
-    return vec3(0);
-}
-
-vec3 calcPointLight(PointLight light) {
-    return vec3(0);
-}
+//vec3 calcPointLight(PointLight light) {
+//    return vec3(0);
+//}
 
 void main(){         
     vec3 normal = normalize(vs_out.worldNormal);
-    FragColor = vec4(abs(normal),1.0f);
+    vec3 objectColor = abs(normal);
+    FragColor = vec4(objectColor, 1.0);
 }

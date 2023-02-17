@@ -23,6 +23,7 @@
 #include "EW/ShapeGen.h"
 
 #include "HD/Lights.h"
+#include "HD/Material.h"
 
 void processInput(GLFWwindow* window);
 void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
@@ -53,7 +54,6 @@ const float CAMERA_ZOOM_SPEED = 3.0f;
 Camera camera((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
 
 glm::vec3 bgColor = glm::vec3(0);
-glm::vec3 lightColor = glm::vec3(1.0f);
 glm::vec3 lightPosition = glm::vec3(0.0f, 3.0f, 0.0f);
 
 bool wireFrame = false;
@@ -128,6 +128,7 @@ int main() {
 	ew::Transform planeTransform;
 	ew::Transform cylinderTransform;
 	DirectionalLight dLight;
+	Material material;
 
 	cubeTransform.position = glm::vec3(-2.0f, 0.0f, 0.0f);
 	sphereTransform.position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -139,6 +140,10 @@ int main() {
 
 	dLight.transform.scale = glm::vec3(0.5f);
 	dLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
+	dLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	dLight.color = glm::vec3(1.0, 0.0, 0.0);
+
+	material.ambientK = 1.0;
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -157,6 +162,12 @@ int main() {
 		litShader.use();
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());
 		litShader.setMat4("_View", camera.getViewMatrix());
+		
+		/*litShader.setVec3("dLight.direction", dLight.transform.rotation);
+		litShader.setVec3("dLight.color", dLight.color);
+		litShader.setFloat("dLight.intensity", dLight.intensity);
+
+		litShader.setFloat("material.ambientK", material.ambientK);*/
 
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
@@ -179,14 +190,15 @@ int main() {
 		unlitShader.setMat4("_Projection", camera.getProjectionMatrix());
 		unlitShader.setMat4("_View", camera.getViewMatrix());
 		unlitShader.setMat4("_Model", dLight.transform.getModelMatrix());
-		unlitShader.setVec3("_Color", lightColor);
+		unlitShader.setVec3("_Color", dLight.color);
 		sphereMesh.draw();
 
 		//Draw UI
 		ImGui::Begin("Settings");
 
-		ImGui::ColorEdit3("Light Color", &lightColor.r);
+		ImGui::ColorEdit3("Light Color", &dLight.color.r);
 		ImGui::DragFloat3("Light Position", &dLight.transform.position.x);
+		ImGui::DragFloat3("Light Rotation", &dLight.transform.rotation.x);
 		ImGui::End();
 
 		ImGui::Render();

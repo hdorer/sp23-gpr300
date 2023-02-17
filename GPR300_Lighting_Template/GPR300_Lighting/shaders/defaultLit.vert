@@ -14,7 +14,6 @@ out struct Vertex {
 } vs_out;
 
 void main(){    
-    // Normal = vNormal;
     vs_out.worldNormal = mat3(transpose(inverse(_Model))) * vNormal;
     vs_out.worldPosition = vec3(_Model * vec4(vPos, 1));
     gl_Position = _Projection * _View * _Model * vec4(vPos,1);
