@@ -164,10 +164,10 @@ int main() {
 		litShader.setMat4("_View", camera.getViewMatrix());
 		litShader.setVec3("cameraPosition", camera.getPosition());
 		
-		litShader.setVec3("dLight.position", dLight.transform.position);
-		litShader.setVec3("dLight.direction", dLight.transform.rotation);
-		litShader.setVec3("dLight.color", dLight.color);
-		litShader.setFloat("dLight.intensity", dLight.intensity);
+		litShader.setVec3("pLight.position", dLight.transform.position);
+		litShader.setVec3("pLight.direction", dLight.transform.rotation);
+		litShader.setVec3("pLight.color", dLight.color);
+		litShader.setFloat("pLight.intensity", dLight.intensity);
 
 		litShader.setFloat("material.shininess", material.shininess);
 

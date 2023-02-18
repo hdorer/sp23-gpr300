@@ -20,22 +20,22 @@ struct PointLight {
     float linearAttenuation;
 };
 
-struct DirectionalLight {
-    vec3 position;
-    vec3 direction;
-    vec3 color;
-    float intensity;
-};
+//struct DirectionalLight {
+//    vec3 position;
+//    vec3 direction;
+//    vec3 color;
+//    float intensity;
+//};
 
-struct SpotLight {
-    vec3 position;
-    vec3 color;
-    vec3 direction;
-    float intensity;
-    float linearAttenuation;
-    float minAngle;
-    float maxAngle;
-};
+//struct SpotLight {
+//    vec3 position;
+//    vec3 color;
+//    vec3 direction;
+//    float intensity;
+//    float linearAttenuation;
+//    float minAngle;
+//    float maxAngle;
+//};
 
 out vec4 FragColor;
 
@@ -43,40 +43,38 @@ in vec3 Normal;
 
 uniform vec3 cameraPosition;
 
-uniform DirectionalLight dLight;
+uniform PointLight pLight;
 
 uniform Material material;
 
-//vec4 calcDirectionalLight(DirectionalLight light) {
-//    float diffuseAmount = material.ambientK * min(dot(light.direction, vs_out.worldNormal), 0) * light.intensity;
-//    vec3 diffuse = vec3(diffuseAmount * light.color.x, diffuseAmount * light.color.y, diffuseAmount * light.color.z);
-//
-//    float specularAmount = 1.0 - material.ambientK * 
-//
-//    return vec4(diffuse.x, diffuse.y, diffuse.z, 0.0);
-//}
-
-//vec3 calcPointLight(PointLight light) {
-//    return vec3(0);
-//}
-
-void main(){         
-    vec3 normal = normalize(vs_out.worldNormal);
-    vec3 objectColor = abs(normal);
-
+vec3 getAmbient(vec3 lightColor) {
     float ambientLightLevel = 0.8;
-    vec3 ambient = ambientLightLevel * dLight.color;
+    return ambientLightLevel * lightColor;
+}
 
-    vec3 directionToLight = normalize(dLight.position - vs_out.worldPosition);
+vec3 getSpecular(vec3 lightPosition, vec3 lightColor) {
+    vec3 normal = normalize(vs_out.worldNormal);
+    vec3 directionToLight = normalize(lightPosition - vs_out.worldPosition);
+
     float diffuseAmount = max(dot(normal, directionToLight), 0.0);
-    vec3 diffuse = diffuseAmount * dLight.color;
+    return diffuseAmount * lightColor;
+}
+
+vec3 getDiffuse(vec3 lightPosition, vec3 lightColor) {
+    vec3 normal = normalize(vs_out.worldNormal);
+    vec3 directionToLight = normalize(lightPosition - vs_out.worldPosition);
 
     float specularStrength = 0.8;
     vec3 viewDirection = normalize(cameraPosition - vs_out.worldPosition);
     vec3 reflectDirection = reflect(-directionToLight, normal);
     float specularAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
-    vec3 specular = specularStrength * specularAmount * dLight.color;
+    return specularStrength * specularAmount * lightColor;
+}
 
-    vec3 result = (ambient + diffuse + specular) * objectColor;
+void main(){         
+    vec3 normal = normalize(vs_out.worldNormal);
+    vec3 objectColor = abs(normal);    
+
+    vec3 result = (getAmbient(pLight.color) + getDiffuse(pLight.position, pLight.color) + getSpecular(pLight.position, pLight.color)) * objectColor;
     FragColor = vec4(result, 1.0);
 }
