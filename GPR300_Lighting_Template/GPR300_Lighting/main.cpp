@@ -143,7 +143,7 @@ int main() {
 	dLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	dLight.color = glm::vec3(0.8, 0.4, 0.8);
 
-	material.ambientK = 1.0;
+	material.shininess = 256;
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -169,7 +169,7 @@ int main() {
 		litShader.setVec3("dLight.color", dLight.color);
 		litShader.setFloat("dLight.intensity", dLight.intensity);
 
-		//litShader.setFloat("material.ambientK", material.ambientK);
+		litShader.setFloat("material.shininess", material.shininess);
 
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());

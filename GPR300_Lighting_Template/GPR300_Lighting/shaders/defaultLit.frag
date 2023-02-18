@@ -6,7 +6,11 @@ in struct Vertex {
 } vs_out;
 
 struct Material {
+    vec3 color;
     float ambientK;
+    float diffuseK;
+    float specularK;
+    float shininess;
 };
 
 struct PointLight {
@@ -68,10 +72,9 @@ void main(){
     vec3 diffuse = diffuseAmount * dLight.color;
 
     float specularStrength = 0.8;
-    float shininess = 256;
     vec3 viewDirection = normalize(cameraPosition - vs_out.worldPosition);
     vec3 reflectDirection = reflect(-directionToLight, normal);
-    float specularAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), shininess);
+    float specularAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
     vec3 specular = specularStrength * specularAmount * dLight.color;
 
     vec3 result = (ambient + diffuse + specular) * objectColor;
