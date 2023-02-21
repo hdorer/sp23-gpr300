@@ -80,11 +80,11 @@ vec3 getSpecular(vec3 position, vec3 color, float intensity) {
 
 float angularAttenuation(float intensity, vec3 position, vec3 direction, float minAngle, float maxAngle) {
     vec3 directionToFrag = normalize(vs_out.worldPosition - position);
-    float cosAngle = cos(dot(direction, directionToFrag));
-    float cosMinAngle = cos(minAngle);
-    float cosMaxAngle = cos(maxAngle);
+    float cosAngle = cos(dot(normalize(-direction), directionToFrag));
+    float cosMinAngle = cos(radians(minAngle));
+    float cosMaxAngle = cos(radians(maxAngle));
 
-    return intensity * clamp((cosAngle - cosMaxAngle) / cosMinAngle - cosMaxAngle, 0, 1);
+    return intensity * clamp((cosAngle - cosMaxAngle) / (cosMinAngle - cosMaxAngle), 0, 1);
 }
 
 //vec3 pointLightLevel(PointLight light) {

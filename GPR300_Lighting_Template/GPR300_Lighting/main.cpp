@@ -154,8 +154,8 @@ int main() {
 	sLight.color = glm::vec3(0.8, 1.0, 0.8);
 	sLight.intensity = 1.0;
 	sLight.ambientLevel = 0.8;
-	sLight.minAngle = 20;
-	sLight.maxAngle = 60;
+	sLight.minAngle = 1;
+	sLight.maxAngle = 10;
 
 	material.color = glm::vec3(1.0, 0.6, 0.8);
 	material.ambientK = 0.5;
