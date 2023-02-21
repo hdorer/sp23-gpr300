@@ -127,7 +127,7 @@ int main() {
 	ew::Transform sphereTransform;
 	ew::Transform planeTransform;
 	ew::Transform cylinderTransform;
-	DirectionalLight dLight;
+	PointLight pLight;
 	Material material;
 
 	cubeTransform.position = glm::vec3(-2.0f, 0.0f, 0.0f);
@@ -138,12 +138,14 @@ int main() {
 
 	cylinderTransform.position = glm::vec3(2.0f, 0.0f, 0.0f);
 
-	dLight.transform.scale = glm::vec3(0.5f);
-	dLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	dLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	dLight.color = glm::vec3(0.8, 0.4, 0.8);
+	pLight.transform.scale = glm::vec3(0.5f);
+	pLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
+	pLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	pLight.color = glm::vec3(0.8, 1.0, 0.8);
+	pLight.intensity = 1.0;
+	pLight.ambientLevel = 0.8;
 
-	material.color = glm::vec3(1.0, 0.5, 0.0);
+	material.color = glm::vec3(1.0, 0.6, 0.8);
 	material.ambientK = 0.5;
 	material.diffuseK = 0.2;
 	material.specularK = 0.8;
@@ -168,10 +170,11 @@ int main() {
 		litShader.setMat4("_View", camera.getViewMatrix());
 		litShader.setVec3("cameraPosition", camera.getPosition());
 		
-		litShader.setVec3("pLight.position", dLight.transform.position);
-		litShader.setVec3("pLight.direction", dLight.transform.rotation);
-		litShader.setVec3("pLight.color", dLight.color);
-		litShader.setFloat("pLight.intensity", dLight.intensity);
+		litShader.setVec3("pLight.position", pLight.transform.position);
+		litShader.setVec3("pLight.direction", pLight.transform.rotation);
+		litShader.setVec3("pLight.color", pLight.color);
+		litShader.setFloat("pLight.intensity", pLight.intensity);
+		litShader.setFloat("pLight.ambientLevel", pLight.ambientLevel);
 
 		litShader.setVec3("material.color", material.color);
 		litShader.setFloat("material.ambientK", material.ambientK);
@@ -199,16 +202,16 @@ int main() {
 		unlitShader.use();
 		unlitShader.setMat4("_Projection", camera.getProjectionMatrix());
 		unlitShader.setMat4("_View", camera.getViewMatrix());
-		unlitShader.setMat4("_Model", dLight.transform.getModelMatrix());
-		unlitShader.setVec3("_Color", dLight.color);
+		unlitShader.setMat4("_Model", pLight.transform.getModelMatrix());
+		unlitShader.setVec3("_Color", pLight.color);
 		sphereMesh.draw();
 
 		//Draw UI
 		ImGui::Begin("Settings");
 
-		ImGui::ColorEdit3("Light Color", &dLight.color.r);
-		ImGui::DragFloat3("Light Position", &dLight.transform.position.x);
-		ImGui::DragFloat3("Light Rotation", &dLight.transform.rotation.x);
+		ImGui::ColorEdit3("Light Color", &pLight.color.r);
+		ImGui::DragFloat3("Light Position", &pLight.transform.position.x);
+		ImGui::DragFloat3("Light Rotation", &pLight.transform.rotation.x);
 		ImGui::End();
 
 		ImGui::Render();

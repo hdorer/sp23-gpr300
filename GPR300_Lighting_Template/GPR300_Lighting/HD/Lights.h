@@ -10,6 +10,7 @@ struct PointLight {
 	ew::Transform transform;
 	glm::vec3 color;
 	float intensity;
+	float ambientLevel;
 	float linearAttenuation;
 };
 
@@ -17,13 +18,15 @@ struct DirectionalLight {
 	ew::Transform transform;
 	glm::vec3 color;
 	float intensity;
+	float ambientLevel;
 };
 
 struct SpotLight {
 	ew::Transform transform;
 	glm::vec3 color;
 	float intensity;
-	float linearAttenuation;
+	float ambientLevel;
+	float angularAttenuation;
 	float minAngle;
 	float maxAngle;
 };
