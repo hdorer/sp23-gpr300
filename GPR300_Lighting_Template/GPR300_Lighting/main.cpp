@@ -143,6 +143,10 @@ int main() {
 	dLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	dLight.color = glm::vec3(0.8, 0.4, 0.8);
 
+	material.color = glm::vec3(1.0, 0.5, 0.0);
+	material.ambientK = 0.5;
+	material.diffuseK = 0.2;
+	material.specularK = 0.8;
 	material.shininess = 256;
 
 	while (!glfwWindowShouldClose(window)) {
@@ -169,6 +173,10 @@ int main() {
 		litShader.setVec3("pLight.color", dLight.color);
 		litShader.setFloat("pLight.intensity", dLight.intensity);
 
+		litShader.setVec3("material.color", material.color);
+		litShader.setFloat("material.ambientK", material.ambientK);
+		litShader.setFloat("material.diffuseK", material.diffuseK);
+		litShader.setFloat("material.specularK", material.specularK);
 		litShader.setFloat("material.shininess", material.shininess);
 
 		//Draw cube

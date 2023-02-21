@@ -49,26 +49,25 @@ uniform Material material;
 
 vec3 getAmbient(vec3 lightColor) {
     float ambientLightLevel = 0.8;
-    return ambientLightLevel * lightColor;
-}
-
-vec3 getSpecular(vec3 lightPosition, vec3 lightColor) {
-    vec3 normal = normalize(vs_out.worldNormal);
-    vec3 directionToLight = normalize(lightPosition - vs_out.worldPosition);
-
-    float diffuseAmount = max(dot(normal, directionToLight), 0.0);
-    return diffuseAmount * lightColor;
+    return (material.color * material.ambientK) * ambientLightLevel * lightColor;
 }
 
 vec3 getDiffuse(vec3 lightPosition, vec3 lightColor) {
     vec3 normal = normalize(vs_out.worldNormal);
     vec3 directionToLight = normalize(lightPosition - vs_out.worldPosition);
 
-    float specularStrength = 0.8;
+    float diffuseAmount = max(dot(normal, directionToLight), 0.0);
+    return (material.color * material.specularK) * diffuseAmount * lightColor; // change lightColor to a light diffuse vec3 or something
+}
+
+vec3 getSpecular(vec3 lightPosition, vec3 lightColor) {
+    vec3 normal = normalize(vs_out.worldNormal);
+    vec3 directionToLight = normalize(lightPosition - vs_out.worldPosition);
+
     vec3 viewDirection = normalize(cameraPosition - vs_out.worldPosition);
     vec3 reflectDirection = reflect(-directionToLight, normal);
     float specularAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
-    return specularStrength * specularAmount * lightColor;
+    return (material.color * material.specularK) * specularAmount * lightColor;
 }
 
 void main(){         
