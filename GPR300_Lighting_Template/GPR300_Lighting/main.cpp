@@ -127,7 +127,8 @@ int main() {
 	ew::Transform sphereTransform;
 	ew::Transform planeTransform;
 	ew::Transform cylinderTransform;
-	PointLight pLight;
+	//PointLight pLight;
+	SpotLight sLight;
 	Material material;
 
 	cubeTransform.position = glm::vec3(-2.0f, 0.0f, 0.0f);
@@ -138,14 +139,23 @@ int main() {
 
 	cylinderTransform.position = glm::vec3(2.0f, 0.0f, 0.0f);
 
-	pLight.transform.scale = glm::vec3(0.5f);
+	/*pLight.transform.scale = glm::vec3(0.5f);
 	pLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 	pLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	pLight.color = glm::vec3(0.8, 1.0, 0.8);
 	pLight.intensity = 1.0;
 	pLight.ambientLevel = 0.8;
 	pLight.minRadius = 0.5;
-	pLight.maxRadius = 8;
+	pLight.maxRadius = 8;*/
+
+	sLight.transform.scale = glm::vec3(0.5f);
+	sLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
+	sLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	sLight.color = glm::vec3(0.8, 1.0, 0.8);
+	sLight.intensity = 1.0;
+	sLight.ambientLevel = 0.8;
+	sLight.minAngle = 20;
+	sLight.maxAngle = 60;
 
 	material.color = glm::vec3(1.0, 0.6, 0.8);
 	material.ambientK = 0.5;
@@ -172,13 +182,20 @@ int main() {
 		litShader.setMat4("_View", camera.getViewMatrix());
 		litShader.setVec3("cameraPosition", camera.getPosition());
 		
-		litShader.setVec3("pLight.position", pLight.transform.position);
-		litShader.setVec3("pLight.direction", pLight.transform.rotation);
+		/*litShader.setVec3("pLight.position", pLight.transform.position);
 		litShader.setVec3("pLight.color", pLight.color);
 		litShader.setFloat("pLight.intensity", pLight.intensity);
 		litShader.setFloat("pLight.ambientLevel", pLight.ambientLevel);
 		litShader.setFloat("pLight.minRadius", pLight.minRadius);
-		litShader.setFloat("pLight.maxRadius", pLight.maxRadius);
+		litShader.setFloat("pLight.maxRadius", pLight.maxRadius);*/
+
+		litShader.setVec3("sLight.position", sLight.transform.position);
+		litShader.setVec3("sLight.direction", sLight.transform.rotation);
+		litShader.setVec3("sLight.color", sLight.color);
+		litShader.setFloat("sLight.intensity", sLight.intensity);
+		litShader.setFloat("sLight.ambientLevel", sLight.ambientLevel);
+		litShader.setFloat("sLight.minAngle", sLight.minAngle);
+		litShader.setFloat("sLight.maxAngle", sLight.maxAngle);
 
 		litShader.setVec3("material.color", material.color);
 		litShader.setFloat("material.ambientK", material.ambientK);
@@ -206,16 +223,21 @@ int main() {
 		unlitShader.use();
 		unlitShader.setMat4("_Projection", camera.getProjectionMatrix());
 		unlitShader.setMat4("_View", camera.getViewMatrix());
-		unlitShader.setMat4("_Model", pLight.transform.getModelMatrix());
-		unlitShader.setVec3("_Color", pLight.color);
+		/*unlitShader.setMat4("_Model", pLight.transform.getModelMatrix());
+		unlitShader.setVec3("_Color", pLight.color);*/
+		unlitShader.setMat4("_Model", sLight.transform.getModelMatrix());
+		unlitShader.setVec3("_Color", sLight.color);
 		sphereMesh.draw();
 
 		//Draw UI
 		ImGui::Begin("Settings");
 
-		ImGui::ColorEdit3("Light Color", &pLight.color.r);
+		/*ImGui::ColorEdit3("Light Color", &pLight.color.r);
 		ImGui::DragFloat3("Light Position", &pLight.transform.position.x);
-		ImGui::DragFloat3("Light Rotation", &pLight.transform.rotation.x);
+		ImGui::DragFloat3("Light Rotation", &pLight.transform.rotation.x);*/
+		ImGui::ColorEdit3("Light Color", &sLight.color.x);
+		ImGui::DragFloat3("Light Position", &sLight.transform.position.x);
+		ImGui::DragFloat3("Light Rotation", &sLight.transform.rotation.x);
 		ImGui::End();
 
 		ImGui::Render();

@@ -13,14 +13,14 @@ struct Material {
     float shininess;
 };
 
-struct PointLight {
-    vec3 position;
-    vec3 color;
-    float intensity;
-    float ambientLevel;
-    float minRadius;
-    float maxRadius;
-};
+//struct PointLight {
+//    vec3 position;
+//    vec3 color;
+//    float intensity;
+//    float ambientLevel;
+//    float minRadius;
+//    float maxRadius;
+//};
 
 //struct DirectionalLight {
 //    vec3 position;
@@ -29,15 +29,15 @@ struct PointLight {
 //    float intensity;
 //};
 
-//struct SpotLight {
-//    vec3 position;
-//    vec3 color;
-//    vec3 direction;
-//    float intensity;
-//    float linearAttenuation;
-//    float minAngle;
-//    float maxAngle;
-//};
+struct SpotLight {
+    vec3 position;
+    vec3 color;
+    vec3 direction;
+    float intensity;
+    float ambientLevel;
+    float minAngle;
+    float maxAngle;
+};
 
 out vec4 FragColor;
 
@@ -45,7 +45,8 @@ in vec3 Normal;
 
 uniform vec3 cameraPosition;
 
-uniform PointLight pLight;
+//uniform PointLight pLight;
+uniform SpotLight sLight;
 
 uniform Material material;
 
@@ -71,14 +72,33 @@ vec3 getSpecular(vec3 position, vec3 color, float intensity) {
     return (material.color * material.specularK) * specularAmount * (color * intensity);
 }
 
-float linearAttenuation(float intensity, vec3 position, float minRadius, float maxRadius) {
-    float distanceToLight = distance(position, vs_out.worldPosition);
-    
-    return intensity * min(max((maxRadius - distanceToLight) / (maxRadius - minRadius), 0), 1);
+//float linearAttenuation(float intensity, vec3 position, float minRadius, float maxRadius) {
+//    float distanceToLight = distance(position, vs_out.worldPosition);
+//    
+//    return intensity * min(max((maxRadius - distanceToLight) / (maxRadius - minRadius), 0), 1);
+//}
+
+float angularAttenuation(float intensity, vec3 position, vec3 direction, float minAngle, float maxAngle) {
+    vec3 directionToFrag = normalize(vs_out.worldPosition - position);
+    float cosAngle = cos(dot(direction, directionToFrag));
+    float cosMinAngle = cos(minAngle);
+    float cosMaxAngle = cos(maxAngle);
+
+    return intensity * clamp((cosAngle - cosMaxAngle) / cosMinAngle - cosMaxAngle, 0, 1);
 }
 
-vec3 pointLightLevel(PointLight light) {
-    float intensity = linearAttenuation(light.intensity, light.position, light.minRadius, light.maxRadius);
+//vec3 pointLightLevel(PointLight light) {
+//    float intensity = linearAttenuation(light.intensity, light.position, light.minRadius, light.maxRadius);
+//
+//    vec3 ambient = getAmbient(light.ambientLevel, light.color, intensity);
+//    vec3 diffuse = getDiffuse(light.position, light.color, intensity);
+//    vec3 specular = getSpecular(light.position, light.color, intensity);
+//
+//    return ambient + diffuse + specular;
+//}
+
+vec3 spotLightLevel(SpotLight light) {
+    float intensity = angularAttenuation(light.intensity, light.position, light.direction, light.minAngle, light.maxAngle);
 
     vec3 ambient = getAmbient(light.ambientLevel, light.color, intensity);
     vec3 diffuse = getDiffuse(light.position, light.color, intensity);
@@ -91,6 +111,7 @@ void main(){
     vec3 normal = normalize(vs_out.worldNormal);
     vec3 objectColor = abs(normal);
     
-    vec3 result = pointLightLevel(pLight) * objectColor;
+    //vec3 result = pointLightLevel(pLight) * objectColor;
+    vec3 result = spotLightLevel(sLight) * objectColor;
     FragColor = vec4(result, 1.0);
 }
