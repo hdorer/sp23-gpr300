@@ -11,7 +11,8 @@ struct PointLight {
 	glm::vec3 color;
 	float intensity;
 	float ambientLevel;
-	float linearAttenuation;
+	float minRadius;
+	float maxRadius;
 };
 
 struct DirectionalLight {

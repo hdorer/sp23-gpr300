@@ -18,7 +18,8 @@ struct PointLight {
     vec3 color;
     float intensity;
     float ambientLevel;
-    float linearAttenuation;
+    float minRadius;
+    float maxRadius;
 };
 
 //struct DirectionalLight {
@@ -48,36 +49,48 @@ uniform PointLight pLight;
 
 uniform Material material;
 
-vec3 getAmbient(float ambientLevel, vec3 lightColor, float lightIntensity) {
-    return (material.color * material.ambientK) * ambientLevel * (lightColor * lightIntensity);
+vec3 getAmbient(float ambientLevel, vec3 color, float intensity) {
+    return (material.color * material.ambientK) * ambientLevel * (color * intensity);
 }
 
-vec3 getDiffuse(vec3 lightPosition, vec3 lightColor, float lightIntensity) {
+vec3 getDiffuse(vec3 position, vec3 color, float intensity) {
     vec3 normal = normalize(vs_out.worldNormal);
-    vec3 directionToLight = normalize(lightPosition - vs_out.worldPosition);
+    vec3 directionToLight = normalize(position - vs_out.worldPosition);
 
     float diffuseAmount = max(dot(normal, directionToLight), 0.0);
-    return (material.color * material.specularK) * diffuseAmount * (lightColor * lightIntensity); // change lightColor to a light diffuse vec3 or something
+    return (material.color * material.specularK) * diffuseAmount * (color * intensity); // change lightColor to a light diffuse vec3 or something
 }
 
-vec3 getSpecular(vec3 lightPosition, vec3 lightColor, float lightIntensity) {
+vec3 getSpecular(vec3 position, vec3 color, float intensity) {
     vec3 normal = normalize(vs_out.worldNormal);
-    vec3 directionToLight = normalize(lightPosition - vs_out.worldPosition);
+    vec3 directionToLight = normalize(position - vs_out.worldPosition);
 
     vec3 viewDirection = normalize(cameraPosition - vs_out.worldPosition);
     vec3 reflectDirection = reflect(-directionToLight, normal);
     float specularAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
-    return (material.color * material.specularK) * specularAmount * (lightColor * lightIntensity);
+    return (material.color * material.specularK) * specularAmount * (color * intensity);
+}
+
+float linearAttenuation(float intensity, vec3 position, float minRadius, float maxRadius) {
+    float distanceToLight = distance(position, vs_out.worldPosition);
+    
+    return intensity * min(max((maxRadius - distanceToLight) / (maxRadius - minRadius), 0), 1);
+}
+
+vec3 pointLightLevel(PointLight light) {
+    float intensity = linearAttenuation(light.intensity, light.position, light.minRadius, light.maxRadius);
+
+    vec3 ambient = getAmbient(light.ambientLevel, light.color, intensity);
+    vec3 diffuse = getDiffuse(light.position, light.color, intensity);
+    vec3 specular = getSpecular(light.position, light.color, intensity);
+
+    return ambient + diffuse + specular;
 }
 
 void main(){         
     vec3 normal = normalize(vs_out.worldNormal);
-    vec3 objectColor = abs(normal);    
-
-    vec3 ambient = getAmbient(pLight.ambientLevel, pLight.color, pLight.intensity);
-    vec3 diffuse = getDiffuse(pLight.position, pLight.color, pLight.intensity);
-    vec3 specular = getSpecular(pLight.position, pLight.color, pLight.intensity);
+    vec3 objectColor = abs(normal);
     
-    vec3 result = (ambient + diffuse + specular) * objectColor;
+    vec3 result = pointLightLevel(pLight) * objectColor;
     FragColor = vec4(result, 1.0);
 }

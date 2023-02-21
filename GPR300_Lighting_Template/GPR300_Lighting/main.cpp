@@ -144,6 +144,8 @@ int main() {
 	pLight.color = glm::vec3(0.8, 1.0, 0.8);
 	pLight.intensity = 1.0;
 	pLight.ambientLevel = 0.8;
+	pLight.minRadius = 0.5;
+	pLight.maxRadius = 8;
 
 	material.color = glm::vec3(1.0, 0.6, 0.8);
 	material.ambientK = 0.5;
@@ -175,6 +177,8 @@ int main() {
 		litShader.setVec3("pLight.color", pLight.color);
 		litShader.setFloat("pLight.intensity", pLight.intensity);
 		litShader.setFloat("pLight.ambientLevel", pLight.ambientLevel);
+		litShader.setFloat("pLight.minRadius", pLight.minRadius);
+		litShader.setFloat("pLight.maxRadius", pLight.maxRadius);
 
 		litShader.setVec3("material.color", material.color);
 		litShader.setFloat("material.ambientK", material.ambientK);
