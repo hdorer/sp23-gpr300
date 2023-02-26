@@ -167,6 +167,7 @@ int main() {
 	dLight.color = glm::vec3(0.8, 1.0, 0.8);
 	dLight.intensity = 1.0;
 	dLight.ambientLevel = 0.8;
+	dLight.name = "Directional Light";
 
 	material.color = glm::vec3(1.0, 0.6, 0.8);
 	material.ambientK = 0.5;
@@ -257,9 +258,8 @@ int main() {
 		/*ImGui::ColorEdit3("Light Color", &sLight.color.x);
 		ImGui::DragFloat3("Light Position", &sLight.transform.position.x);
 		ImGui::DragFloat3("Light Rotation", &sLight.transform.rotation.x);*/
-		ImGui::ColorEdit3("Light Color", &dLight.color.x);
-		ImGui::DragFloat3("Light Position", &dLight.transform.position.x);
-		ImGui::DragFloat2("Light Rotation", &dLight.transform.rotation.x);
+		dLight.drawGui();
+		
 		ImGui::End();
 
 		ImGui::Render();
