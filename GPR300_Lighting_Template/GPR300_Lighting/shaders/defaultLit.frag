@@ -54,20 +54,18 @@ vec3 getAmbient(float ambientLevel, vec3 color, float intensity) {
     return (material.color * material.ambientK) * ambientLevel * (color * intensity);
 }
 
-vec3 getDiffuse(vec3 position, vec3 color, float intensity) { // pass in directionToLight as a parameter.
+vec3 getDiffuse(vec3 position, vec3 direction, vec3 color, float intensity) { // pass in directionToLight as a parameter.
     vec3 normal = normalize(vs_out.worldNormal);
-    vec3 directionToLight = normalize(position - vs_out.worldPosition);
 
-    float diffuseAmount = max(dot(normal, directionToLight), 0.0);
+    float diffuseAmount = max(dot(normal, direction), 0.0);
     return (material.color * material.specularK) * diffuseAmount * (color * intensity); // change lightColor to a light diffuse vec3 or something
 }
 
-vec3 getSpecular(vec3 position, vec3 color, float intensity) { // pass in directionToLight as a parameter
+vec3 getSpecular(vec3 position, vec3 direction, vec3 color, float intensity) { // pass in directionToLight as a parameter
     vec3 normal = normalize(vs_out.worldNormal);
-    vec3 directionToLight = normalize(position - vs_out.worldPosition);
 
     vec3 viewDirection = normalize(cameraPosition - vs_out.worldPosition);
-    vec3 reflectDirection = reflect(-directionToLight, normal);
+    vec3 reflectDirection = reflect(-direction, normal);
     float specularAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
     return (material.color * material.specularK) * specularAmount * (color * intensity);
 }
@@ -89,6 +87,7 @@ float angularAttenuation(float intensity, vec3 position, vec3 direction, float m
 
 //vec3 pointLightLevel(PointLight light) {
 //    float intensity = linearAttenuation(light.intensity, light.position, light.minRadius, light.maxRadius);
+//    vec3 directionToLight = normalize(position - vs_out.worldPosition);
 //
 //    vec3 ambient = getAmbient(light.ambientLevel, light.color, intensity);
 //    vec3 diffuse = getDiffuse(light.position, light.color, intensity);
@@ -99,10 +98,11 @@ float angularAttenuation(float intensity, vec3 position, vec3 direction, float m
 
 vec3 spotLightLevel(SpotLight light) {
     float intensity = angularAttenuation(light.intensity, light.position, light.direction, light.minAngle, light.maxAngle);
+    vec3 directionToLight = normalize(light.position - vs_out.worldPosition);
 
     vec3 ambient = getAmbient(light.ambientLevel, light.color, intensity);
-    vec3 diffuse = getDiffuse(light.position, light.color, intensity);
-    vec3 specular = getSpecular(light.position, light.color, intensity);
+    vec3 diffuse = getDiffuse(light.position, directionToLight, light.color, intensity);
+    vec3 specular = getSpecular(light.position, directionToLight, light.color, intensity);
 
     return ambient + diffuse + specular;
 }
