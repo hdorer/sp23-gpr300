@@ -24,6 +24,7 @@
 
 #include "HD/Lights.h"
 #include "HD/Material.h"
+#include <iostream>
 
 void processInput(GLFWwindow* window);
 void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
@@ -189,8 +190,12 @@ int main() {
 		litShader.setFloat("pLight.minRadius", pLight.minRadius);
 		litShader.setFloat("pLight.maxRadius", pLight.maxRadius);*/
 
+		glm::vec3 sLightDirection = sLight.direction();
+
+		std::cout << "(" << sLightDirection.x << ", " << sLightDirection.y << ", " << sLightDirection.z << ")" << std::endl;
+
 		litShader.setVec3("sLight.position", sLight.transform.position);
-		litShader.setVec3("sLight.direction", sLight.transform.rotation);
+		litShader.setVec3("sLight.direction", sLight.direction());
 		litShader.setVec3("sLight.color", sLight.color);
 		litShader.setFloat("sLight.intensity", sLight.intensity);
 		litShader.setFloat("sLight.ambientLevel", sLight.ambientLevel);

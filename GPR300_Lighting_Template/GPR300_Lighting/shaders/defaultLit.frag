@@ -54,7 +54,7 @@ vec3 getAmbient(float ambientLevel, vec3 color, float intensity) {
     return (material.color * material.ambientK) * ambientLevel * (color * intensity);
 }
 
-vec3 getDiffuse(vec3 position, vec3 color, float intensity) {
+vec3 getDiffuse(vec3 position, vec3 color, float intensity) { // pass in directionToLight as a parameter.
     vec3 normal = normalize(vs_out.worldNormal);
     vec3 directionToLight = normalize(position - vs_out.worldPosition);
 
@@ -62,7 +62,7 @@ vec3 getDiffuse(vec3 position, vec3 color, float intensity) {
     return (material.color * material.specularK) * diffuseAmount * (color * intensity); // change lightColor to a light diffuse vec3 or something
 }
 
-vec3 getSpecular(vec3 position, vec3 color, float intensity) {
+vec3 getSpecular(vec3 position, vec3 color, float intensity) { // pass in directionToLight as a parameter
     vec3 normal = normalize(vs_out.worldNormal);
     vec3 directionToLight = normalize(position - vs_out.worldPosition);
 
@@ -80,7 +80,7 @@ vec3 getSpecular(vec3 position, vec3 color, float intensity) {
 
 float angularAttenuation(float intensity, vec3 position, vec3 direction, float minAngle, float maxAngle) {
     vec3 directionToFrag = normalize(vs_out.worldPosition - position);
-    float cosAngle = cos(dot(normalize(-direction), directionToFrag));
+    float cosAngle = dot(normalize(direction), directionToFrag);
     float cosMinAngle = cos(radians(minAngle));
     float cosMaxAngle = cos(radians(maxAngle));
 
