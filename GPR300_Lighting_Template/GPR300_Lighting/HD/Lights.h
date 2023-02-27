@@ -9,10 +9,12 @@
 class DirectionalLight {
 	public:
 		DirectionalLight();
-		DirectionalLight(std::string name);
 
 		glm::mat4 getModelMatrix();
 		glm::vec3 getColor();
+		bool getEnabled();
+
+		void setName(std::string name);
 
 		glm::vec3 direction();
 		void drawGui();
@@ -23,20 +25,23 @@ class DirectionalLight {
 		float intensity;
 		float ambientLevel;
 	
-		std::string name = "Directional Light";
+		std::string name;
 		bool enabled;
 };
 
 class PointLight {
 	public:
 		PointLight();
-		PointLight(std::string name);
 
 		glm::mat4 getModelMatrix();
 		glm::vec3 getColor();
+		bool getEnabled();
+
+		void setName(std::string name);
 		
 		void drawGui();
 		void setShaderValues(Shader* shader);
+		void setShaderValues(Shader* shader, int shaderIndex);
 	private:
 		ew::Transform transform;
 		glm::vec3 color;
@@ -45,21 +50,24 @@ class PointLight {
 		float minRadius;
 		float maxRadius;
 	
-		std::string name = "Point Light";
+		std::string name;
 		bool enabled;
 };
 
 class SpotLight {
 	public:
 		SpotLight();
-		SpotLight(std::string name);
 
 		glm::mat4 getModelMatrix();
 		glm::vec3 getColor();
+		bool getEnabled();
+
+		void setName(std::string name);
 
 		glm::vec3 direction();
 		void drawGui();
 		void setShaderValues(Shader* shader);
+		void setShaderValues(Shader* shader, int shaderIndex);
 	private:
 		ew::Transform transform;
 		glm::vec3 color;
@@ -68,6 +76,6 @@ class SpotLight {
 		float minAngle;
 		float maxAngle;
 
-		std::string name = "Spot Light";
+		std::string name;
 		bool enabled = true;
 };

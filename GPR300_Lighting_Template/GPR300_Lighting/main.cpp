@@ -129,9 +129,17 @@ int main() {
 	ew::Transform planeTransform;
 	ew::Transform cylinderTransform;
 	
-	PointLight pLight;
-	SpotLight sLight;
+	const int MAX_LIGHTS = 5;
+	PointLight pLights[MAX_LIGHTS];
+	SpotLight sLights[MAX_LIGHTS];
 	DirectionalLight dLight;
+
+	for(int i = 0; i < MAX_LIGHTS; i++) {
+		pLights[i].setName("Point Light " + std::to_string(i + 1));
+	}
+	for(int i = 0; i < MAX_LIGHTS; i++) {
+		sLights[i].setName("Spot Light " + std::to_string(i + 1));
+	}
 	
 	Material material;
 
@@ -162,8 +170,24 @@ int main() {
 		litShader.setMat4("_View", camera.getViewMatrix());
 		litShader.setVec3("cameraPosition", camera.getPosition());
 
-		pLight.setShaderValues(&litShader);
-		sLight.setShaderValues(&litShader);
+		int pointLights = 0;
+		for(int i = 0; i < MAX_LIGHTS; i++) {
+			if(pLights[i].getEnabled()) {
+				pLights[i].setShaderValues(&litShader, i);
+				pointLights++;
+			}
+		}
+		litShader.setInt("numPointLights", pointLights);
+
+		int spotLights = 0;
+		for(int i = 0; i < MAX_LIGHTS; i++) {
+			if(sLights[i].getEnabled()) {
+				sLights[i].setShaderValues(&litShader, i);
+				spotLights++;
+			}
+		}
+		litShader.setInt("numSpotLights", spotLights);
+
 		dLight.setShaderValues(&litShader);
 
 		material.setShaderValues(&litShader);
@@ -188,13 +212,21 @@ int main() {
 		unlitShader.use();
 		unlitShader.setMat4("_Projection", camera.getProjectionMatrix());
 		unlitShader.setMat4("_View", camera.getViewMatrix());
-		unlitShader.setMat4("_Model", pLight.getModelMatrix());
-		unlitShader.setVec3("_Color", pLight.getColor());
-		sphereMesh.draw();
 		
-		unlitShader.setMat4("_Model", sLight.getModelMatrix());
-		unlitShader.setVec3("_Color", sLight.getColor());
-		sphereMesh.draw();
+		for(int i = 0; i < MAX_LIGHTS; i++) {
+			if(pLights[i].getEnabled()) {
+				unlitShader.setMat4("_Model", pLights[i].getModelMatrix());
+				unlitShader.setVec3("_Color", pLights[i].getColor());
+				sphereMesh.draw();
+			}
+		}
+		for(int i = 0; i < MAX_LIGHTS; i++) {
+			if(sLights[i].getEnabled()) {
+				unlitShader.setMat4("_Model", sLights[i].getModelMatrix());
+				unlitShader.setVec3("_Color", sLights[i].getColor());
+				sphereMesh.draw();
+			}
+		}
 		
 		unlitShader.setMat4("_Model", dLight.getModelMatrix());
 		unlitShader.setVec3("_Color", dLight.getColor());
@@ -203,8 +235,12 @@ int main() {
 		//Draw UI
 		ImGui::Begin("Settings");
 
-		pLight.drawGui();
-		sLight.drawGui();
+		for(int i = 0; i < MAX_LIGHTS; i++) {
+			pLights[i].drawGui();
+		}
+		for(int i = 0; i < MAX_LIGHTS; i++) {
+			sLights[i].drawGui();
+		}
 		dLight.drawGui();
 		
 		ImGui::End();

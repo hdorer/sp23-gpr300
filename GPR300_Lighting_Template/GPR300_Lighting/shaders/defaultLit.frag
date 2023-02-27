@@ -25,6 +25,8 @@ struct PointLight {
     float maxRadius;
 };
 
+#define MAX_POINT_LIGHTS 5
+
 struct SpotLight {
     vec3 position;
     vec3 color;
@@ -34,6 +36,8 @@ struct SpotLight {
     float minAngle;
     float maxAngle;
 };
+
+#define MAX_SPOT_LIGHTS 5 
 
 in struct Vertex {
     vec3 worldPosition;
@@ -47,8 +51,12 @@ in vec3 Normal;
 
 uniform vec3 cameraPosition;
 
-uniform PointLight pLight;
-uniform SpotLight sLight;
+uniform PointLight pLights[MAX_POINT_LIGHTS];
+uniform int numPointLights = 0;
+
+uniform SpotLight sLights[MAX_SPOT_LIGHTS];
+uniform int numSpotLights = 0;
+
 uniform DirectionalLight dLight;
 
 uniform Material material;
@@ -123,8 +131,15 @@ void main(){
     vec3 objectColor = abs(normal);
     
     vec3 result = vec3(0);
-    result += pointLightLevel(pLight) * objectColor;
-    result += spotLightLevel(sLight) * objectColor;
+
+    for(int i = 0; i < numPointLights; i++) {
+        result += pointLightLevel(pLights[i]) * objectColor;
+    }
+    
+    for(int i = 0; i < numSpotLights; i++) {
+        result += spotLightLevel(sLights[i]) * objectColor;
+    }
+
     result += directionalLightLevel(dLight) * objectColor;
 
     FragColor = vec4(result, 1.0);

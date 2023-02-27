@@ -16,20 +16,12 @@ DirectionalLight::DirectionalLight() {
 	intensity = 1.0;
 	ambientLevel = 0.8;
 	name = "Directional Light";
-}
-
-DirectionalLight::DirectionalLight(std::string name) {
-	transform.scale = glm::vec3(0.5f);
-	transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
-	color = glm::vec3(0.8, 1.0, 0.8);
-	intensity = 1.0;
-	ambientLevel = 0.8;
-	this->name = name;
+	enabled = true;
 }
 
 void DirectionalLight::drawGui() {
 	if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
+		ImGui::Checkbox((name +" Enabled").c_str(), & enabled);
 		ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
 		ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
 		ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
@@ -42,19 +34,28 @@ glm::vec3 DirectionalLight::getColor() {
 	return color;
 }
 
+bool DirectionalLight::getEnabled() {
+	return enabled;
+}
+
 glm::mat4 DirectionalLight::getModelMatrix() {
 	return transform.getModelMatrix();
 }
 
+void DirectionalLight::setName(std::string name) {
+	this->name = name;
+}
+
 void DirectionalLight::setShaderValues(Shader* shader) {
-	shader->setVec3("pLight.position", transform.position);
-	shader->setVec3("pLight.color", color);
-	shader->setFloat("pLight.intensity", intensity);
-	shader->setFloat("pLight.ambientLevel", ambientLevel);
+	shader->setVec3("dLight.position", transform.position);
+	shader->setVec3("dLight.color", color);
+	shader->setFloat("dLight.intensity", intensity);
+	shader->setFloat("dLight.ambientLevel", ambientLevel);
 }
 
 void PointLight::drawGui() {
 	if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
+		ImGui::Checkbox((name + " Enabled").c_str(), &enabled);
 		ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
 		ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
 		ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
@@ -67,6 +68,10 @@ void PointLight::drawGui() {
 
 glm::vec3 PointLight::getColor() {
 	return color;
+}
+
+bool PointLight::getEnabled() {
+	return enabled;
 }
 
 glm::mat4 PointLight::getModelMatrix() {
@@ -83,27 +88,29 @@ PointLight::PointLight() {
 	minRadius = 0.5;
 	maxRadius = 8;
 	name = "Point Light";
+	enabled = true;
 }
 
-PointLight::PointLight(std::string name) {
-	transform.scale = glm::vec3(0.5f);
-	transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	color = glm::vec3(0.8, 1.0, 0.8);
-	intensity = 1.0;
-	ambientLevel = 0.8;
-	minRadius = 0.5;
-	maxRadius = 8;
+void PointLight::setName(std::string name) {
 	this->name = name;
 }
 
 void PointLight::setShaderValues(Shader* shader) {
-	shader->setVec3("pLight.position", transform.position);
-	shader->setVec3("pLight.color", color);
-	shader->setFloat("pLight.intensity", intensity);
-	shader->setFloat("pLight.ambientLevel", ambientLevel);
-	shader->setFloat("pLight.minRadius", minRadius);
-	shader->setFloat("pLight.maxRadius", maxRadius);
+	shader->setVec3("pLights[0].position", transform.position);
+	shader->setVec3("pLights[0].color", color);
+	shader->setFloat("pLights[0].intensity", intensity);
+	shader->setFloat("pLights[0].ambientLevel", ambientLevel);
+	shader->setFloat("pLights[0].minRadius", minRadius);
+	shader->setFloat("pLights[0].maxRadius", maxRadius);
+}
+
+void PointLight::setShaderValues(Shader* shader, int shaderIndex) {
+	shader->setVec3("pLights[" + std::to_string(shaderIndex) + "].position", transform.position);
+	shader->setVec3("pLights[" + std::to_string(shaderIndex) + "].color", color);
+	shader->setFloat("pLights[" + std::to_string(shaderIndex) + "].intensity", intensity);
+	shader->setFloat("pLights[" + std::to_string(shaderIndex) + "].ambientLevel", ambientLevel);
+	shader->setFloat("pLights[" + std::to_string(shaderIndex) + "].minRadius", minRadius);
+	shader->setFloat("pLights[" + std::to_string(shaderIndex) + "].maxRadius", maxRadius);
 }
 
 glm::vec3 SpotLight::direction() {
@@ -116,6 +123,7 @@ glm::vec3 SpotLight::direction() {
 
 void SpotLight::drawGui() {
 	if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
+		ImGui::Checkbox((name + " Enabled").c_str(), &enabled);
 		ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
 		ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
 		ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
@@ -130,18 +138,36 @@ glm::vec3 SpotLight::getColor() {
 	return color;
 }
 
+bool SpotLight::getEnabled() {
+	return enabled;
+}
+
 glm::mat4 SpotLight::getModelMatrix() {
 	return transform.getModelMatrix();
 }
 
+void SpotLight::setName(std::string name) {
+	this->name = name;
+}
+
 void SpotLight::setShaderValues(Shader* shader) {
-	shader->setVec3("sLight.position", transform.position);
-	shader->setVec3("sLight.direction", direction());
-	shader->setVec3("sLight.color", color);
-	shader->setFloat("sLight.intensity", intensity);
-	shader->setFloat("sLight.ambientLevel", ambientLevel);
-	shader->setFloat("sLight.minAngle", minAngle);
-	shader->setFloat("sLight.maxAngle", maxAngle);
+	shader->setVec3("sLights[0].position", transform.position);
+	shader->setVec3("sLights[0].direction", direction());
+	shader->setVec3("sLights[0].color", color);
+	shader->setFloat("sLights[0].intensity", intensity);
+	shader->setFloat("sLights[0].ambientLevel", ambientLevel);
+	shader->setFloat("sLights[0].minAngle", minAngle);
+	shader->setFloat("sLights[0].maxAngle", maxAngle);
+}
+
+void SpotLight::setShaderValues(Shader* shader, int shaderIndex) {
+	shader->setVec3("sLights[" + std::to_string(shaderIndex) + "].position", transform.position);
+	shader->setVec3("sLights[" + std::to_string(shaderIndex) + "].direction", direction());
+	shader->setVec3("sLights[" + std::to_string(shaderIndex) + "].color", color);
+	shader->setFloat("sLights[" + std::to_string(shaderIndex) + "].intensity", intensity);
+	shader->setFloat("sLights[" + std::to_string(shaderIndex) + "].ambientLevel", ambientLevel);
+	shader->setFloat("sLights[" + std::to_string(shaderIndex) + "].minAngle", minAngle);
+	shader->setFloat("sLights[" + std::to_string(shaderIndex) + "].maxAngle", maxAngle);
 }
 
 SpotLight::SpotLight() {
@@ -154,16 +180,5 @@ SpotLight::SpotLight() {
 	minAngle = 1;
 	maxAngle = 10;
 	name = "Spot Light";
-}
-
-SpotLight::SpotLight(std::string name) {
-	transform.scale = glm::vec3(0.5f);
-	transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	transform.rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
-	color = glm::vec3(0.8, 1.0, 0.8);
-	intensity = 1.0;
-	ambientLevel = 0.8;
-	minAngle = 1;
-	maxAngle = 10;
-	this->name = name;
+	enabled = true;
 }
