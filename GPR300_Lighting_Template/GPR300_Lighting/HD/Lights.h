@@ -21,11 +21,13 @@ struct DirectionalLight {
 	}
 
 	void drawGui() {
-		ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
-		ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
-		ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
-		ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
-		ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
+		if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
+			ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
+			ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
+			ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
+			ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
+			ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
+		}
 	}
 };
 
@@ -39,13 +41,15 @@ struct PointLight {
 	std::string name = "Point Light";
 
 	void drawGui() {
-		ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
-		ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
-		ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
-		ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
-		ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
-		ImGui::DragFloat((name + " Min Radius").c_str(), &minRadius, 0.1);
-		ImGui::DragFloat((name + "Max radius").c_str(), &maxRadius, 0.1);
+		if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
+			ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
+			ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
+			ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
+			ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
+			ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
+			ImGui::DragFloat((name + " Min Radius").c_str(), &minRadius, 0.1);
+			ImGui::DragFloat((name + "Max radius").c_str(), &maxRadius, 0.1);
+		}
 	}
 };
 
@@ -67,12 +71,14 @@ struct SpotLight {
 	}
 
 	void drawGui() {
-		ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
-		ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
-		ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
-		ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
-		ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
-		ImGui::DragFloat((name + " Min Angle").c_str(), &minAngle, 0.1);
-		ImGui::DragFloat((name + " Max Angle").c_str(), &maxAngle, 0.1);
+		if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
+			ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
+			ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
+			ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
+			ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
+			ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
+			ImGui::DragFloat((name + " Min Angle").c_str(), &minAngle, 0.1);
+			ImGui::DragFloat((name + " Max Angle").c_str(), &maxAngle, 0.1);
+		}
 	}
 };

@@ -122,9 +122,10 @@ void main(){
     vec3 normal = normalize(vs_out.worldNormal);
     vec3 objectColor = abs(normal);
     
-    vec3 result = pointLightLevel(pLight) * objectColor;
-//    vec3 result = spotLightLevel(sLight) * objectColor;
-    //vec3 result = directionalLightLevel(dLight) * objectColor;
+    vec3 result = vec3(0);
+    result += pointLightLevel(pLight) * objectColor;
+    result += spotLightLevel(sLight) * objectColor;
+    result += directionalLightLevel(dLight) * objectColor;
 
     FragColor = vec4(result, 1.0);
 }
