@@ -77,7 +77,8 @@ vec3 getSpecular(vec3 position, vec3 direction, vec3 color, float intensity) { /
 
     vec3 viewDirection = normalize(cameraPosition - vs_out.worldPosition);
     vec3 reflectDirection = reflect(-direction, normal);
-    float specularAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
+    vec3 halfVector = normalize(viewDirection + reflectDirection);
+    float specularAmount = pow(max(dot(viewDirection, halfVector), 0.0), material.shininess);
     return (material.color * material.specularK) * specularAmount * (color * intensity);
 }
 
