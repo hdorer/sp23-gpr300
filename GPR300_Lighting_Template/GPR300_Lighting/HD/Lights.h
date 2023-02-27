@@ -1,84 +1,73 @@
 #pragma once
 
 #include "../EW/Transform.h"
+#include "../EW/Shader.h"
 #include "../imgui/imgui.h"
 #include "glm/glm.hpp"
 #include <string>
 
-struct DirectionalLight {
-	ew::Transform transform;
-	glm::vec3 color;
-	float intensity;
-	float ambientLevel;
-	std::string name = "Directional Light";
+class DirectionalLight {
+	public:
+		DirectionalLight();
+		DirectionalLight(std::string name);
 
-	glm::vec3 direction() {
-		float x = cos(glm::radians(transform.rotation.y)) * cos(glm::radians(transform.rotation.x));
-		float y = sin(glm::radians(transform.rotation.x));
-		float z = sin(glm::radians(transform.rotation.y)) * cos(glm::radians(transform.rotation.x));
+		glm::mat4 getModelMatrix();
+		glm::vec3 getColor();
 
-		return glm::normalize(glm::vec3(x, y, z));
-	}
-
-	void drawGui() {
-		if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
-			ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
-			ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
-			ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
-			ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
-			ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
-		}
-	}
+		glm::vec3 direction();
+		void drawGui();
+		void setShaderValues(Shader* shader);
+	private:
+		ew::Transform transform;
+		glm::vec3 color;
+		float intensity;
+		float ambientLevel;
+	
+		std::string name = "Directional Light";
+		bool enabled;
 };
 
-struct PointLight {
-	ew::Transform transform;
-	glm::vec3 color;
-	float intensity;
-	float ambientLevel;
-	float minRadius;
-	float maxRadius;
-	std::string name = "Point Light";
+class PointLight {
+	public:
+		PointLight();
+		PointLight(std::string name);
 
-	void drawGui() {
-		if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
-			ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
-			ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
-			ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
-			ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
-			ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
-			ImGui::DragFloat((name + " Min Radius").c_str(), &minRadius, 0.1);
-			ImGui::DragFloat((name + "Max radius").c_str(), &maxRadius, 0.1);
-		}
-	}
+		glm::mat4 getModelMatrix();
+		glm::vec3 getColor();
+		
+		void drawGui();
+		void setShaderValues(Shader* shader);
+	private:
+		ew::Transform transform;
+		glm::vec3 color;
+		float intensity;
+		float ambientLevel;
+		float minRadius;
+		float maxRadius;
+	
+		std::string name = "Point Light";
+		bool enabled;
 };
 
-struct SpotLight {
-	ew::Transform transform;
-	glm::vec3 color;
-	float intensity;
-	float ambientLevel;
-	float minAngle;
-	float maxAngle;
-	std::string name = "Spot Light";
+class SpotLight {
+	public:
+		SpotLight();
+		SpotLight(std::string name);
 
-	glm::vec3 direction() {
-		float x = cos(glm::radians(transform.rotation.y)) * cos(glm::radians(transform.rotation.x));
-		float y = sin(glm::radians(transform.rotation.x));
-		float z = sin(glm::radians(transform.rotation.y)) * cos(glm::radians(transform.rotation.x));
+		glm::mat4 getModelMatrix();
+		glm::vec3 getColor();
 
-		return glm::normalize(glm::vec3(x, y, z));
-	}
+		glm::vec3 direction();
+		void drawGui();
+		void setShaderValues(Shader* shader);
+	private:
+		ew::Transform transform;
+		glm::vec3 color;
+		float intensity;
+		float ambientLevel;
+		float minAngle;
+		float maxAngle;
 
-	void drawGui() {
-		if(ImGui::CollapsingHeader((name + " Settings").c_str())) {
-			ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
-			ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
-			ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
-			ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
-			ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
-			ImGui::DragFloat((name + " Min Angle").c_str(), &minAngle, 0.1);
-			ImGui::DragFloat((name + " Max Angle").c_str(), &maxAngle, 0.1);
-		}
-	}
+		std::string name = "Spot Light";
+		bool enabled = true;
 };

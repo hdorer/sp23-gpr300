@@ -143,38 +143,6 @@ int main() {
 
 	cylinderTransform.position = glm::vec3(2.0f, 0.0f, 0.0f);
 
-	pLight.transform.scale = glm::vec3(0.5f);
-	pLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	pLight.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	pLight.color = glm::vec3(0.8, 1.0, 0.8);
-	pLight.intensity = 1.0;
-	pLight.ambientLevel = 0.8;
-	pLight.minRadius = 0.5;
-	pLight.maxRadius = 8;
-
-	sLight.transform.scale = glm::vec3(0.5f);
-	sLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	sLight.transform.rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
-	sLight.color = glm::vec3(0.8, 1.0, 0.8);
-	sLight.intensity = 1.0;
-	sLight.ambientLevel = 0.8;
-	sLight.minAngle = 1;
-	sLight.maxAngle = 10;
-
-	dLight.transform.scale = glm::vec3(0.5f);
-	dLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	dLight.transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
-	dLight.color = glm::vec3(0.8, 1.0, 0.8);
-	dLight.intensity = 1.0;
-	dLight.ambientLevel = 0.8;
-	dLight.name = "Directional Light";
-
-	material.color = glm::vec3(1.0, 0.6, 0.8);
-	material.ambientK = 0.5;
-	material.diffuseK = 0.2;
-	material.specularK = 0.8;
-	material.shininess = 256;
-
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClearColor(bgColor.r,bgColor.g,bgColor.b, 1.0f);
@@ -193,33 +161,12 @@ int main() {
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());
 		litShader.setMat4("_View", camera.getViewMatrix());
 		litShader.setVec3("cameraPosition", camera.getPosition());
-		
-		litShader.setVec3("pLight.position", pLight.transform.position);
-		litShader.setVec3("pLight.color", pLight.color);
-		litShader.setFloat("pLight.intensity", pLight.intensity);
-		litShader.setFloat("pLight.ambientLevel", pLight.ambientLevel);
-		litShader.setFloat("pLight.minRadius", pLight.minRadius);
-		litShader.setFloat("pLight.maxRadius", pLight.maxRadius);
 
-		litShader.setVec3("sLight.position", sLight.transform.position);
-		litShader.setVec3("sLight.direction", sLight.direction());
-		litShader.setVec3("sLight.color", sLight.color);
-		litShader.setFloat("sLight.intensity", sLight.intensity);
-		litShader.setFloat("sLight.ambientLevel", sLight.ambientLevel);
-		litShader.setFloat("sLight.minAngle", sLight.minAngle);
-		litShader.setFloat("sLight.maxAngle", sLight.maxAngle);
+		pLight.setShaderValues(&litShader);
+		sLight.setShaderValues(&litShader);
+		dLight.setShaderValues(&litShader);
 
-		litShader.setVec3("dLight.position", dLight.transform.position);
-		litShader.setVec3("dLight.direction", dLight.direction());
-		litShader.setVec3("dLight.color", dLight.color);
-		litShader.setFloat("dLight.intensity", dLight.intensity);
-		litShader.setFloat("dLight.ambientLevel", dLight.ambientLevel);
-
-		litShader.setVec3("material.color", material.color);
-		litShader.setFloat("material.ambientK", material.ambientK);
-		litShader.setFloat("material.diffuseK", material.diffuseK);
-		litShader.setFloat("material.specularK", material.specularK);
-		litShader.setFloat("material.shininess", material.shininess);
+		material.setShaderValues(&litShader);
 
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
@@ -241,16 +188,16 @@ int main() {
 		unlitShader.use();
 		unlitShader.setMat4("_Projection", camera.getProjectionMatrix());
 		unlitShader.setMat4("_View", camera.getViewMatrix());
-		unlitShader.setMat4("_Model", pLight.transform.getModelMatrix());
-		unlitShader.setVec3("_Color", pLight.color);
+		unlitShader.setMat4("_Model", pLight.getModelMatrix());
+		unlitShader.setVec3("_Color", pLight.getColor());
 		sphereMesh.draw();
 		
-		unlitShader.setMat4("_Model", sLight.transform.getModelMatrix());
-		unlitShader.setVec3("_Color", sLight.color);
+		unlitShader.setMat4("_Model", sLight.getModelMatrix());
+		unlitShader.setVec3("_Color", sLight.getColor());
 		sphereMesh.draw();
 		
-		unlitShader.setMat4("_Model", dLight.transform.getModelMatrix());
-		unlitShader.setVec3("_Color", dLight.color);
+		unlitShader.setMat4("_Model", dLight.getModelMatrix());
+		unlitShader.setVec3("_Color", dLight.getColor());
 		sphereMesh.draw();
 
 		//Draw UI
