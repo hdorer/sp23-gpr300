@@ -130,8 +130,8 @@ int main() {
 	ew::Transform cylinderTransform;
 	
 	PointLight pLight;
-	//SpotLight sLight;
-	//DirectionalLight dLight;
+	SpotLight sLight;
+	DirectionalLight dLight;
 	
 	Material material;
 
@@ -152,22 +152,22 @@ int main() {
 	pLight.minRadius = 0.5;
 	pLight.maxRadius = 8;
 
-	/*sLight.transform.scale = glm::vec3(0.5f);
+	sLight.transform.scale = glm::vec3(0.5f);
 	sLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 	sLight.transform.rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
 	sLight.color = glm::vec3(0.8, 1.0, 0.8);
 	sLight.intensity = 1.0;
 	sLight.ambientLevel = 0.8;
 	sLight.minAngle = 1;
-	sLight.maxAngle = 10;*/
+	sLight.maxAngle = 10;
 
-	/*dLight.transform.scale = glm::vec3(0.5f);
+	dLight.transform.scale = glm::vec3(0.5f);
 	dLight.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 	dLight.transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
 	dLight.color = glm::vec3(0.8, 1.0, 0.8);
 	dLight.intensity = 1.0;
 	dLight.ambientLevel = 0.8;
-	dLight.name = "Directional Light";*/
+	dLight.name = "Directional Light";
 
 	material.color = glm::vec3(1.0, 0.6, 0.8);
 	material.ambientK = 0.5;
@@ -201,19 +201,19 @@ int main() {
 		litShader.setFloat("pLight.minRadius", pLight.minRadius);
 		litShader.setFloat("pLight.maxRadius", pLight.maxRadius);
 
-		/*litShader.setVec3("sLight.position", sLight.transform.position);
+		litShader.setVec3("sLight.position", sLight.transform.position);
 		litShader.setVec3("sLight.direction", sLight.direction());
 		litShader.setVec3("sLight.color", sLight.color);
 		litShader.setFloat("sLight.intensity", sLight.intensity);
 		litShader.setFloat("sLight.ambientLevel", sLight.ambientLevel);
 		litShader.setFloat("sLight.minAngle", sLight.minAngle);
-		litShader.setFloat("sLight.maxAngle", sLight.maxAngle);*/
+		litShader.setFloat("sLight.maxAngle", sLight.maxAngle);
 
-		/*litShader.setVec3("dLight.position", dLight.transform.position);
+		litShader.setVec3("dLight.position", dLight.transform.position);
 		litShader.setVec3("dLight.direction", dLight.direction());
 		litShader.setVec3("dLight.color", dLight.color);
 		litShader.setFloat("dLight.intensity", dLight.intensity);
-		litShader.setFloat("dLight.ambientLevel", dLight.ambientLevel);*/
+		litShader.setFloat("dLight.ambientLevel", dLight.ambientLevel);
 
 		litShader.setVec3("material.color", material.color);
 		litShader.setFloat("material.ambientK", material.ambientK);
@@ -243,18 +243,22 @@ int main() {
 		unlitShader.setMat4("_View", camera.getViewMatrix());
 		unlitShader.setMat4("_Model", pLight.transform.getModelMatrix());
 		unlitShader.setVec3("_Color", pLight.color);
-		/*unlitShader.setMat4("_Model", sLight.transform.getModelMatrix());
-		unlitShader.setVec3("_Color", sLight.color);*/
-		/*unlitShader.setMat4("_Model", dLight.transform.getModelMatrix());
-		unlitShader.setVec3("_Color", dLight.color);*/
+		sphereMesh.draw();
+		
+		unlitShader.setMat4("_Model", sLight.transform.getModelMatrix());
+		unlitShader.setVec3("_Color", sLight.color);
+		sphereMesh.draw();
+		
+		unlitShader.setMat4("_Model", dLight.transform.getModelMatrix());
+		unlitShader.setVec3("_Color", dLight.color);
 		sphereMesh.draw();
 
 		//Draw UI
 		ImGui::Begin("Settings");
 
 		pLight.drawGui();
-		//sLight.drawGui();
-		//dLight.drawGui();
+		sLight.drawGui();
+		dLight.drawGui();
 		
 		ImGui::End();
 
