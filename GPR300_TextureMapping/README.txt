@@ -1,1 +1,0 @@
-I chose clamped linear falloff as my attenuation formula because it seemed like the easiest one to implement.

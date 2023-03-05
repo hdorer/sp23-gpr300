@@ -22,10 +22,6 @@
 #include "EW/Transform.h"
 #include "EW/ShapeGen.h"
 
-#include "HD/Lights.h"
-#include "HD/Material.h"
-#include <iostream>
-
 void processInput(GLFWwindow* window);
 void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
 void keyboardCallback(GLFWwindow* window, int keycode, int scancode, int action, int mods);
@@ -55,6 +51,7 @@ const float CAMERA_ZOOM_SPEED = 3.0f;
 Camera camera((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
 
 glm::vec3 bgColor = glm::vec3(0);
+glm::vec3 lightColor = glm::vec3(1.0f);
 glm::vec3 lightPosition = glm::vec3(0.0f, 3.0f, 0.0f);
 
 bool wireFrame = false;
@@ -128,20 +125,7 @@ int main() {
 	ew::Transform sphereTransform;
 	ew::Transform planeTransform;
 	ew::Transform cylinderTransform;
-	
-	const int MAX_LIGHTS = 5;
-	PointLight pLights[MAX_LIGHTS];
-	SpotLight sLights[MAX_LIGHTS];
-	DirectionalLight dLight;
-
-	for(int i = 0; i < MAX_LIGHTS; i++) {
-		pLights[i].setName("Point Light " + std::to_string(i + 1));
-	}
-	for(int i = 0; i < MAX_LIGHTS; i++) {
-		sLights[i].setName("Spot Light " + std::to_string(i + 1));
-	}
-	
-	Material material;
+	ew::Transform lightTransform;
 
 	cubeTransform.position = glm::vec3(-2.0f, 0.0f, 0.0f);
 	sphereTransform.position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -150,6 +134,9 @@ int main() {
 	planeTransform.scale = glm::vec3(10.0f);
 
 	cylinderTransform.position = glm::vec3(2.0f, 0.0f, 0.0f);
+
+	lightTransform.scale = glm::vec3(0.5f);
+	lightTransform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -168,30 +155,7 @@ int main() {
 		litShader.use();
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());
 		litShader.setMat4("_View", camera.getViewMatrix());
-		litShader.setVec3("cameraPosition", camera.getPosition());
-
-		int pointLights = 0;
-		for(int i = 0; i < MAX_LIGHTS; i++) {
-			if(pLights[i].getEnabled()) {
-				pLights[i].setShaderValues(&litShader, i);
-				pointLights++;
-			}
-		}
-		litShader.setInt("numPointLights", pointLights);
-
-		int spotLights = 0;
-		for(int i = 0; i < MAX_LIGHTS; i++) {
-			if(sLights[i].getEnabled()) {
-				sLights[i].setShaderValues(&litShader, i);
-				spotLights++;
-			}
-		}
-		litShader.setInt("numSpotLights", spotLights);
-
-		dLight.setShaderValues(&litShader);
-
-		material.setShaderValues(&litShader);
-
+		litShader.setVec3("_LightPos", lightTransform.position);
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
 		cubeMesh.draw();
@@ -212,37 +176,15 @@ int main() {
 		unlitShader.use();
 		unlitShader.setMat4("_Projection", camera.getProjectionMatrix());
 		unlitShader.setMat4("_View", camera.getViewMatrix());
-		
-		for(int i = 0; i < MAX_LIGHTS; i++) {
-			if(pLights[i].getEnabled()) {
-				unlitShader.setMat4("_Model", pLights[i].getModelMatrix());
-				unlitShader.setVec3("_Color", pLights[i].getColor());
-				sphereMesh.draw();
-			}
-		}
-		for(int i = 0; i < MAX_LIGHTS; i++) {
-			if(sLights[i].getEnabled()) {
-				unlitShader.setMat4("_Model", sLights[i].getModelMatrix());
-				unlitShader.setVec3("_Color", sLights[i].getColor());
-				sphereMesh.draw();
-			}
-		}
-		
-		unlitShader.setMat4("_Model", dLight.getModelMatrix());
-		unlitShader.setVec3("_Color", dLight.getColor());
+		unlitShader.setMat4("_Model", lightTransform.getModelMatrix());
+		unlitShader.setVec3("_Color", lightColor);
 		sphereMesh.draw();
 
 		//Draw UI
 		ImGui::Begin("Settings");
 
-		for(int i = 0; i < MAX_LIGHTS; i++) {
-			pLights[i].drawGui();
-		}
-		for(int i = 0; i < MAX_LIGHTS; i++) {
-			sLights[i].drawGui();
-		}
-		dLight.drawGui();
-		
+		ImGui::ColorEdit3("Light Color", &lightColor.r);
+		ImGui::DragFloat3("Light Position", &lightTransform.position.x);
 		ImGui::End();
 
 		ImGui::Render();

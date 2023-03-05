@@ -132,7 +132,6 @@
   <ItemGroup>
     <ClCompile Include="EW\Camera.cpp" />
     <ClCompile Include="EW\ShapeGen.cpp" />
-    <ClCompile Include="HD\Lights.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -148,8 +147,6 @@
     <ClInclude Include="EW\Camera.h" />
     <ClInclude Include="EW\EwMath.h" />
     <ClInclude Include="EW\Mesh.h" />
-    <ClInclude Include="HD\Lights.h" />
-    <ClInclude Include="HD\Material.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_glfw.h" />
