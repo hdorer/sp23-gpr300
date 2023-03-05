@@ -1,7 +1,7 @@
 //Author: Eric Winebrenner
 
 #include "ShapeGen.h"
-
+ 
 #include <glm/gtc/type_ptr.hpp>
 
 namespace ew {
