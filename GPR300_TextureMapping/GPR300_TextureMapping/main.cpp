@@ -49,7 +49,7 @@ const float CAMERA_ZOOM_SPEED = 3.0f;
 
 Camera camera((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
 
-glm::vec3 bgColor = glm::vec3(0.5);
+glm::vec3 bgColor = glm::vec3(0);
 glm::vec3 lightColor = glm::vec3(1.0f);
 glm::vec3 lightPosition = glm::vec3(0.0f, 3.0f, 0.0f);
 
@@ -138,8 +138,6 @@ int main() {
 	lightTransform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 
 	GLuint texture = hd::createTexture("textures/CorrugatedSteel007A_1K_Color.png");
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -161,7 +159,11 @@ int main() {
 		litShader.setVec3("_LightPos", lightTransform.position);
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
+		
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		litShader.setInt("texture1", 0);
+		
 		cubeMesh.draw();
 
 		//Draw sphere

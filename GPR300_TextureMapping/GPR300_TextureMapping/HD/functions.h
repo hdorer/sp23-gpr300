@@ -8,7 +8,7 @@
 namespace hd {
 	GLuint createTexture(const char* filePath) {
 		GLuint texture;
-		glActiveTexture(GL_TEXTURE0);
+		// glActiveTexture(GL_TEXTURE0);
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -23,13 +23,17 @@ namespace hd {
 
 		switch(numComponents) {
 			case 1:
-				format = GL_RED;
+				format = GL_R;
+				break;
 			case 2:
 				format = GL_RG;
+				break;
 			case 3:
 				format = GL_RGB;
+				break;
 			case 4:
 				format = GL_RGBA;
+				break;
 			default:
 				format = NULL;
 		}
