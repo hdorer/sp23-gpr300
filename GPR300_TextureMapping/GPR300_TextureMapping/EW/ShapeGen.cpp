@@ -257,7 +257,7 @@ namespace ew {
 		{
 			glm::vec3 pos = meshData.vertices[i + 1].position;
 			glm::vec3 normal = glm::normalize((pos - meshData.vertices[0].position));
-			glm::vec2 uv = glm::vec2(atan(pos.z / pos.x) / (2 * glm::pi<float>()), pos.y);
+			glm::vec2 uv = glm::vec2(atan(pos.z / pos.x) / (2 * glm::pi<float>()), acos(pos.y) / glm::pi<float>());
 			meshData.vertices.push_back(Vertex(pos, normal, uv));
 		}
 		//Side bottom ring
@@ -265,7 +265,7 @@ namespace ew {
 		{
 			glm::vec3 pos = meshData.vertices[bottomCenterIndex + i + 1].position;
 			glm::vec3 normal = glm::normalize((pos - meshData.vertices[bottomCenterIndex].position));
-			glm::vec2 uv = glm::vec2(atan(pos.z / pos.x) / (2 * glm::pi<float>()), pos.y);
+			glm::vec2 uv = glm::vec2(atan(pos.z / pos.x) / (2 * glm::pi<float>()), acos(pos.y) / glm::pi<float>());
 			meshData.vertices.push_back(Vertex(pos, normal, uv));
 		}
 
