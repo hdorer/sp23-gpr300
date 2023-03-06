@@ -8,9 +8,6 @@
 
 #include <stdio.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -21,6 +18,8 @@
 #include "EW/Mesh.h"
 #include "EW/Transform.h"
 #include "EW/ShapeGen.h"
+
+#include "HD/functions.h"
 
 void processInput(GLFWwindow* window);
 void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
@@ -138,6 +137,10 @@ int main() {
 	lightTransform.scale = glm::vec3(0.5f);
 	lightTransform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 
+	GLuint texture = hd::createTexture("textures/CorrugatedSteel007A_1K_Color.png");
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClearColor(bgColor.r,bgColor.g,bgColor.b, 1.0f);
@@ -158,6 +161,7 @@ int main() {
 		litShader.setVec3("_LightPos", lightTransform.position);
 		//Draw cube
 		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
+		litShader.setInt("texture1", texture);
 		cubeMesh.draw();
 
 		//Draw sphere

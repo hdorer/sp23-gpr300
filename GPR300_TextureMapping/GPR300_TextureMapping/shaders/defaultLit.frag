@@ -4,6 +4,10 @@ out vec4 FragColor;
 in vec3 Normal;
 in vec2 Uv;
 
-void main(){         
-    FragColor = vec4(abs(Normal),1.0f);
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+
+void main(){
+    vec4 color = texture(texture1, Uv);
+    FragColor = color;
 }
