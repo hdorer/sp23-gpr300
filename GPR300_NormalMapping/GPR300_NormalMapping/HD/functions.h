@@ -6,9 +6,9 @@
 #include "stb_image.h"
 
 namespace hd {
-	GLuint createTexture(const char* filePath) {
+	GLuint createTexture(const char* filePath, GLenum textureSlot) {
 		GLuint texture;
-		// glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(textureSlot);
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 

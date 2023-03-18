@@ -137,7 +137,8 @@ int main() {
 	lightTransform.scale = glm::vec3(0.5f);
 	lightTransform.position = glm::vec3(0.0f, 5.0f, 0.0f);
 
-	GLuint texture = hd::createTexture("textures/CorrugatedSteel007A_1K_Color.png");
+	GLuint texture = hd::createTexture("textures/CorrugatedSteel007A_1K_Color.png", GL_TEXTURE0);
+	GLuint normalTexture = hd::createTexture("textures/CorrugatedSteel007A_1K_NormalGL.png", GL_TEXTURE1);
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -163,6 +164,10 @@ int main() {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		litShader.setInt("texture1", 0);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normalTexture);
+		litShader.setInt("normalMap", 1);
 		
 		cubeMesh.draw();
 
