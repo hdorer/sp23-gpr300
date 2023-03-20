@@ -24,6 +24,7 @@ out vec4 FragColor;
 in vec3 Position;
 in vec3 Normal;
 in vec2 Uv;
+in mat3 TBN;
 
 uniform vec3 cameraPosition;
 
@@ -75,6 +76,8 @@ vec4 pointLightLevel(PointLight light, vec3 normal) {
 void main(){
     vec4 color = texture(texture1, Uv);
     vec3 rgbNormal = normalize(texture(normalMap, Uv).rgb);
+    rgbNormal = rgbNormal * 2.0 - 1.0;
+    rgbNormal = TBN * rgbNormal;
     // vec4 color = vec4(Uv.x, Uv.y, 0.0, 1.0);
 
     vec4 result = vec4(0);
