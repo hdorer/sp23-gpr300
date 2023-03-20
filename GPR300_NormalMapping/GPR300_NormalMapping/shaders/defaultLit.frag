@@ -75,9 +75,9 @@ vec4 pointLightLevel(PointLight light, vec3 normal) {
 
 void main(){
     vec4 color = texture(texture1, Uv);
-    vec3 rgbNormal = normalize(texture(normalMap, Uv).rgb);
+    vec3 rgbNormal = texture(normalMap, Uv).rgb;
     rgbNormal = rgbNormal * 2.0 - 1.0;
-    rgbNormal = TBN * rgbNormal;
+    rgbNormal = normalize(TBN * rgbNormal);
     // vec4 color = vec4(Uv.x, Uv.y, 0.0, 1.0);
 
     vec4 result = vec4(0);

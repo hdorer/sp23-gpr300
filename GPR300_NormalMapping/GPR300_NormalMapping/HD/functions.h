@@ -3,6 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "GL/glew.h"
+#include <glm/glm.hpp>
 #include "stb_image.h"
 
 namespace hd {
