@@ -107,5 +107,8 @@
     <ClInclude Include="HD\Lights.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HD\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

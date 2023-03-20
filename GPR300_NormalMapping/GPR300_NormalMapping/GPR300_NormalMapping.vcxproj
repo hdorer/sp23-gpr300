@@ -150,6 +150,7 @@
     <ClInclude Include="EW\Mesh.h" />
     <ClInclude Include="HD\functions.h" />
     <ClInclude Include="HD\Lights.h" />
+    <ClInclude Include="HD\Material.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_glfw.h" />

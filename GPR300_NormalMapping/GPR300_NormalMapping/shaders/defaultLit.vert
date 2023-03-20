@@ -7,10 +7,12 @@ uniform mat4 _Model;
 uniform mat4 _View;
 uniform mat4 _Projection;
 
+out vec3 Position;
 out vec3 Normal;
 out vec2 Uv;
 
-void main(){    
+void main(){
+    Position = vPos;
     Normal = vNormal;
     Uv = vUv;
     gl_Position = _Projection * _View * _Model * vec4(vPos,1);
