@@ -22,6 +22,7 @@
 #include "HD/functions.h"
 #include "HD/Lights.h"
 #include "HD/Material.h"
+#include <iostream>
 
 void processInput(GLFWwindow* window);
 void resizeFrameBufferCallback(GLFWwindow* window, int width, int height);
@@ -142,6 +143,27 @@ int main() {
 
 	GLuint texture = hd::createTexture("textures/CorrugatedSteel007A_1K_Color.png", GL_TEXTURE0);
 	GLuint normalTexture = hd::createTexture("textures/CorrugatedSteel007A_1K_NormalGL.png", GL_TEXTURE1);
+
+	unsigned int fbo;
+	glGenFramebuffers(1, &fbo);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	GLuint framebufferTexture = hd::createTexture("textures/someTexture.png", GL_TEXTURE2);
+	
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTexture, 0);
+
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (fboStatus != GL_FRAMEBUFFER_COMPLETE) {
+		std::cout << "Framebuffer error" << std::endl;
+	}
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
