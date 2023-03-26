@@ -19,7 +19,8 @@ struct Material {
     float shininess;
 };
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 EffectColor;
 
 in vec3 Position;
 in vec3 Normal;
@@ -87,4 +88,11 @@ void main(){
     }
 
     FragColor = result;
+
+    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if(brightness > 1.0) {
+        EffectColor = vec4(FragColor.rgb, 1.0);
+    } else {
+        EffectColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
 }
