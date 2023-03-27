@@ -307,6 +307,7 @@ int main() {
 			glBindTexture(GL_TEXTURE_2D, firstIteration ? colorBuffers[1] : colorBuffers[horizontal]);
 			glBindVertexArray(quadVAO);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
+			glBindVertexArray(0);
 			horizontal = !horizontal;
 			firstIteration = false;
 		}
@@ -329,11 +330,17 @@ int main() {
 		
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
 
 		//Draw UI
 		ImGui::Begin("Settings");
 
 		pLight.drawGui();
+
+		if(ImGui::CollapsingHeader("Bloom Settings")) {
+			ImGui::Checkbox("Enabled", &bloom);
+			ImGui::DragFloat("Exposure", &exposure, 0.01f, 0.0f, FLT_MAX);
+		}
 		
 		ImGui::End();
 
