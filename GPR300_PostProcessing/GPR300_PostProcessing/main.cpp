@@ -107,14 +107,11 @@ int main() {
 	ew::createCylinder(1.0f, 0.5f, 64, cylinderMeshData);
 	ew::MeshData planeMeshData;
 	ew::createPlane(1.0f, 1.0f, planeMeshData);
-	ew::MeshData quadMeshData;
-	ew::createQuad(1.0f, 1.0f, quadMeshData);
 
 	ew::Mesh cubeMesh(&cubeMeshData);
 	ew::Mesh sphereMesh(&sphereMeshData);
 	ew::Mesh planeMesh(&planeMeshData);
 	ew::Mesh cylinderMesh(&cylinderMeshData);
-	ew::Mesh quadMesh(&quadMeshData);
 
 	//Enable back face culling
 	glEnable(GL_CULL_FACE);
@@ -149,6 +146,28 @@ int main() {
 
 	GLuint texture = hd::createTexture("textures/CorrugatedSteel007A_1K_Color.png", GL_TEXTURE0);
 	GLuint normalTexture = hd::createTexture("textures/CorrugatedSteel007A_1K_NormalGL.png", GL_TEXTURE1);
+
+	GLuint quadVAO = 0;
+	GLuint quadVBO;
+
+	float quadVertices[] = {
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	unsigned int fbo;
 	glGenFramebuffers(1, &fbo);
@@ -286,7 +305,8 @@ int main() {
 			glBindFramebuffer(GL_FRAMEBUFFER, pingPongFbo[horizontal]);
 			blurShader.setInt("horizontal", horizontal ? 1 : 0);
 			glBindTexture(GL_TEXTURE_2D, firstIteration ? colorBuffers[1] : colorBuffers[horizontal]);
-			quadMesh.draw();
+			glBindVertexArray(quadVAO);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
 			horizontal = !horizontal;
 			firstIteration = false;
 		}
@@ -307,7 +327,8 @@ int main() {
 		blendShader.setInt("bloom", bloom);
 		blendShader.setFloat("exposure", exposure);
 		
-		quadMesh.draw();
+		glBindVertexArray(quadVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		//Draw UI
 		ImGui::Begin("Settings");
