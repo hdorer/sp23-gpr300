@@ -164,6 +164,11 @@
     <ClInclude Include="EW\Shader.h" />
     <ClInclude Include="EW\Transform.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\blend.frag" />
+    <None Include="shaders\gaussianBlur.frag" />
+    <None Include="shaders\gaussianBlur.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

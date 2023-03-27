@@ -111,4 +111,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\gaussianBlur.frag" />
+    <None Include="shaders\gaussianBlur.vert" />
+    <None Include="shaders\blend.frag" />
+  </ItemGroup>
 </Project>
