@@ -1,15 +1,12 @@
 #version 450                          
 
-struct PointLight {
+struct DirectionalLight {
     vec3 position;
+    vec3 direction;
     vec3 color;
     float intensity;
     float ambientLevel;
-    float minRadius;
-    float maxRadius;
 };
-
-#define MAX_POINT_LIGHTS 5
 
 struct Material {
     vec3 color;
@@ -29,8 +26,7 @@ in mat3 TBN;
 
 uniform vec3 cameraPosition;
 
-uniform PointLight pLights[MAX_POINT_LIGHTS];
-uniform int numPointLights = 0;
+uniform DirectionalLight dLight;
 
 uniform Material material;
 
@@ -63,13 +59,10 @@ float linearAttenuation(float intensity, vec3 position, float minRadius, float m
     return intensity * min(max((maxRadius - distanceToLight) / (maxRadius - minRadius), 0), 1);
 }
 
-vec4 pointLightLevel(PointLight light, vec3 normal) {
-    float intensity = linearAttenuation(light.intensity, light.position, light.minRadius, light.maxRadius);
-    vec3 directionToLight = normalize(light.position - Position);
-
+vec4 directionalLightLevel(DirectionalLight light, vec3 normal) {
     vec4 ambient = getAmbient(light.ambientLevel, light.color, light.intensity);
-    vec4 diffuse = getDiffuse(light.position, directionToLight, light.color, intensity, normal);
-    vec4 specular = getSpecular(light.position, directionToLight, light.color, intensity, normal);
+    vec4 diffuse = getDiffuse(light.position, light.direction, light.color, light.intensity, normal);
+    vec4 specular = getSpecular(light.position, light.direction, light.color, light.intensity, normal);
 
     return ambient + diffuse + specular;
 }
@@ -83,9 +76,7 @@ void main(){
 
     vec4 result = vec4(0);
 
-    for(int i = 0; i < numPointLights; i++) {
-        result += pointLightLevel(pLights[i], rgbNormal) * color;
-    }
+    result += directionalLightLevel(dLight, rgbNormal) * color;
 
     FragColor = result;
 

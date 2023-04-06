@@ -139,8 +139,7 @@ int main() {
 
 	cylinderTransform.position = glm::vec3(2.0f, 0.0f, 0.0f);
 
-	PointLight pLight;
-	pLight.setName("Point Light");
+	DirectionalLight dLight;
 
 	Material material;
 
@@ -254,7 +253,7 @@ int main() {
 		litShader.setMat4("_View", camera.getViewMatrix());
 		litShader.setVec3("cameraPosition", camera.getPosition());
 
-		pLight.setShaderValues(&litShader, 0);
+		dLight.setShaderValues(&litShader);
 		litShader.setInt("numPointLights", 1);
 
 		material.setShaderValues(&litShader);
@@ -288,7 +287,7 @@ int main() {
 		unlitShader.use();
 		unlitShader.setMat4("_Projection", camera.getProjectionMatrix());
 		unlitShader.setMat4("_View", camera.getViewMatrix());
-		unlitShader.setMat4("_Model", pLight.getModelMatrix());
+		unlitShader.setMat4("_Model", dLight.getModelMatrix());
 		unlitShader.setVec3("_Color", lightColor);
 		sphereMesh.draw();
 
@@ -340,7 +339,7 @@ int main() {
 		//Draw UI
 		ImGui::Begin("Settings");
 
-		pLight.drawGui();
+		dLight.drawGui();
 
 		if(ImGui::CollapsingHeader("Bloom Settings")) {
 			ImGui::Checkbox("Enabled", &bloom);
