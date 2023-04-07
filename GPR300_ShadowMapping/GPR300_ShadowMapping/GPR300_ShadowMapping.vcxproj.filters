@@ -115,5 +115,7 @@
     <None Include="shaders\gaussianBlur.frag" />
     <None Include="shaders\gaussianBlur.vert" />
     <None Include="shaders\blend.frag" />
+    <None Include="shaders\shadow.vert" />
+    <None Include="shaders\shadow.frag" />
   </ItemGroup>
 </Project>
