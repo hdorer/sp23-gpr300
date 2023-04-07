@@ -13,14 +13,18 @@ glm::vec3 Camera::getForward() {
 	return forward;
 }
 
+glm::mat4 Camera::getOrtho() {
+	float width = mOrthoSize * mAspectRatio;
+	float right = width * 0.5f;
+	float left = -right;
+	float top = mOrthoSize * 0.5f;
+	float bottom = -top;
+	return glm::ortho(left, right, bottom, top, mNearPlane, mFarPlane);
+}
+
 glm::mat4 Camera::getProjectionMatrix() {
 	if (mOrtho) {
-		float width = mOrthoSize * mAspectRatio;
-		float right = width * 0.5f;
-		float left = -right;
-		float top = mOrthoSize * 0.5f;
-		float bottom = -top;
-		return glm::ortho(left,right,bottom,top, mNearPlane, mFarPlane);
+		return getOrtho();
 	}
 	else {
 		return glm::perspective(glm::radians(mFov), mAspectRatio, mNearPlane, mFarPlane);

@@ -6,14 +6,14 @@
 
 class Camera {
 public:
-	Camera(float aspectRatio) : mAspectRatio(aspectRatio) {
-	}
+	Camera(float aspectRatio) : mAspectRatio(aspectRatio) { }
 	//GETTERS
 	inline glm::vec3 getPosition()const { return mPosition; }
 	inline float getYaw()const { return mYaw; }
 	inline float getPitch()const { return mPitch; }
 	inline float getFov()const { return mFov; }
 	glm::vec3 getForward();
+	glm::mat4 getOrtho();
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getViewMatrix();
 	//SETTERS
