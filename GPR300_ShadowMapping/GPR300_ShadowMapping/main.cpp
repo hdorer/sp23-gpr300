@@ -64,7 +64,7 @@ int main() {
 		return 1;
 	}
 
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Normal Mapping", 0, 0);
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Shadow Mapping", 0, 0);
 	glfwMakeContextCurrent(window);
 
 	if (glewInit() != GLEW_OK) {
@@ -229,6 +229,10 @@ int main() {
 		}
 	}
 
+	bool bloom = false;
+	float exposure = 0.5f;
+	
+	const int BUFFER_SIZE = 1024;
 	unsigned int shadowFbo;
 	glGenFramebuffers(1, &shadowFbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFbo);
@@ -236,7 +240,7 @@ int main() {
 	unsigned int depthBuffer;
 	glGenTextures(1, &depthBuffer);
 	glBindTexture(GL_TEXTURE_2D, depthBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, BUFFER_SIZE, BUFFER_SIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -253,8 +257,9 @@ int main() {
 		std::cout << "Framebuffer error 3" << std::endl;
 	}
 
-	bool bloom = true;
-	float exposure = 0.5f;
+	const int NUM_OBJECTS = 4;
+	ew::Mesh meshes[NUM_OBJECTS] = { cubeMesh, sphereMesh, cylinderMesh, planeMesh };
+	ew::Transform transforms[NUM_OBJECTS] = { cubeTransform, sphereTransform, cylinderTransform, planeTransform };
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -279,12 +284,8 @@ int main() {
 		litShader.setVec3("cameraPosition", camera.getPosition());
 
 		dLight.setShaderValues(&litShader);
-		litShader.setInt("numPointLights", 1);
 
 		material.setShaderValues(&litShader);
-		
-		//Draw cube
-		litShader.setMat4("_Model", cubeTransform.getModelMatrix());
 		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -294,19 +295,7 @@ int main() {
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 		litShader.setInt("normalMap", 1);
 		
-		cubeMesh.draw();
-
-		//Draw sphere
-		litShader.setMat4("_Model", sphereTransform.getModelMatrix());
-		sphereMesh.draw();
-
-		//Draw cylinder
-		litShader.setMat4("_Model", cylinderTransform.getModelMatrix());
-		cylinderMesh.draw();
-
-		//Draw plane
-		litShader.setMat4("_Model", planeTransform.getModelMatrix());
-		planeMesh.draw();
+		hd::drawMeshes(&litShader, "_Model", meshes, transforms, NUM_OBJECTS);
 
 		//Draw light as a small sphere using unlit shader, ironically.
 		unlitShader.use();

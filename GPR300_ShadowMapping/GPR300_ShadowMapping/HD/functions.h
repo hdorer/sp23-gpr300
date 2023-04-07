@@ -51,4 +51,11 @@ namespace hd {
 
 		return texture;
 	}
+
+	void drawMeshes(Shader* shader, std::string modelMatrixName, ew::Mesh meshes[], ew::Transform transforms[], int numObjects) {
+		for(int i = 0; i < numObjects; i++) {
+			shader->setMat4(modelMatrixName, transforms[i].getModelMatrix());
+			meshes[i].draw();
+		}
+	}
 }
