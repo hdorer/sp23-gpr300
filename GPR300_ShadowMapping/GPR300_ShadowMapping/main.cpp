@@ -98,6 +98,7 @@ int main() {
 
 	Shader blurShader("shaders/gaussianBlur.vert", "shaders/gaussianBlur.frag");
 	Shader blendShader("shaders/gaussianBlur.vert", "shaders/blend.frag");
+	Shader shadowShader("shaders/shadow.vert", "shaders/shadow.frag");
 
 	ew::MeshData cubeMeshData;
 	ew::createCube(1.0f, 1.0f, 1.0f, cubeMeshData);
