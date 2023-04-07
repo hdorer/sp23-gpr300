@@ -146,7 +146,7 @@ int main() {
 	GLuint texture = hd::createTexture("textures/CorrugatedSteel007A_1K_Color.png", GL_TEXTURE0);
 	GLuint normalTexture = hd::createTexture("textures/CorrugatedSteel007A_1K_NormalGL.png", GL_TEXTURE1);
 
-	GLuint quadVAO = 0;
+	GLuint quadVAO;
 	GLuint quadVBO;
 
 	float quadVertices[] = {
@@ -203,7 +203,7 @@ int main() {
 
 	GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if(fboStatus != GL_FRAMEBUFFER_COMPLETE) {
-		std::cout << "Framebuffer error" << std::endl;
+		std::cout << "Framebuffer error 1" << std::endl;
 	}
 
 	unsigned int pingPongFbo[2];
@@ -224,8 +224,32 @@ int main() {
 
 		GLenum pingPongFboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if(pingPongFboStatus != GL_FRAMEBUFFER_COMPLETE) {
-			std::cout << "Framebuffer error" << std::endl;
+			std::cout << "Framebuffer error 2" << std::endl;
 		}
+	}
+
+	unsigned int shadowFbo;
+	glGenFramebuffers(1, &shadowFbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFbo);
+
+	unsigned int depthBuffer;
+	glGenTextures(1, &depthBuffer);
+	glBindTexture(GL_TEXTURE_2D, depthBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthBuffer, 0);
+
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+
+	GLenum shadowFboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if(shadowFboStatus != GL_FRAMEBUFFER_COMPLETE) {
+		std::cout << "Framebuffer error 3" << std::endl;
 	}
 
 	bool bloom = true;
