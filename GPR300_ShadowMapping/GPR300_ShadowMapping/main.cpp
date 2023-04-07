@@ -296,7 +296,7 @@ int main() {
 		dLight.setShaderValues(&litShader);
 
 		material.setShaderValues(&litShader);
-		
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		litShader.setInt("texture1", 0);
@@ -315,7 +315,7 @@ int main() {
 		unlitShader.setVec3("_Color", lightColor);
 		sphereMesh.draw();
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		/*glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		bool horizontal = true;
 		bool firstIteration = true;
@@ -358,7 +358,7 @@ int main() {
 		
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
+		glBindVertexArray(0);*/
 
 		//Draw UI
 		ImGui::Begin("Settings");
