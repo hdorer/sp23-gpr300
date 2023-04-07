@@ -278,6 +278,16 @@ int main() {
 		lastFrameTime = time;
 
 		//Draw
+		glBindFramebuffer(GL_FRAMEBUFFER, shadowFbo);
+
+		shadowShader.use();
+		shadowShader.setMat4("projection", camera.getOrtho());
+		shadowShader.setMat4("view", glm::lookAt(dLight.getPosition(), dLight.getDirection(), glm::vec3(0, 1, 0)));
+
+		hd::drawMeshes(&shadowShader, "model", meshes, transforms, NUM_OBJECTS);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		litShader.use();
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());
 		litShader.setMat4("_View", camera.getViewMatrix());

@@ -34,12 +34,20 @@ glm::vec3 DirectionalLight::getColor() {
 	return color;
 }
 
+glm::vec3 DirectionalLight::getDirection() {
+	return transform.rotation;
+}
+
 bool DirectionalLight::getEnabled() {
 	return enabled;
 }
 
 glm::mat4 DirectionalLight::getModelMatrix() {
 	return transform.getModelMatrix();
+}
+
+glm::vec3 DirectionalLight::getPosition() {
+	return transform.position;
 }
 
 void DirectionalLight::setName(std::string name) {
