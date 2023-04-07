@@ -24,7 +24,7 @@ void DirectionalLight::drawGui() {
 		ImGui::Checkbox((name + " Enabled").c_str(), &enabled);
 		ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
 		ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
-		ImGui::DragFloat2((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
+		ImGui::DragFloat3((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
 		ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
 		ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
 	}
@@ -48,8 +48,9 @@ void DirectionalLight::setName(std::string name) {
 
 void DirectionalLight::setShaderValues(Shader* shader) {
 	shader->setVec3("dLight.position", transform.position);
+	shader->setVec3("dLight.direction", transform.rotation);
 	shader->setVec3("dLight.color", color);
-	shader->setFloat("dLight.intensity", intensity);
+	shader->setFloat("dLight.intensity", intensity * 0.1);
 	shader->setFloat("dLight.ambientLevel", ambientLevel);
 }
 
