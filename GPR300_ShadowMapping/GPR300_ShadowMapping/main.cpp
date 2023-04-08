@@ -315,7 +315,9 @@ int main() {
 		unlitShader.setVec3("_Color", lightColor);
 		sphereMesh.draw();
 
-		/*glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		/*
+		uncommenting this leads to a black screen
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		bool horizontal = true;
 		bool firstIteration = true;

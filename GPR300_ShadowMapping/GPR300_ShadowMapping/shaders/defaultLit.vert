@@ -9,10 +9,14 @@ uniform mat4 _Model;
 uniform mat4 _View;
 uniform mat4 _Projection;
 
+uniform mat4 lightView;
+uniform mat4 lightProjection;
+
 out vec3 Position;
 out vec3 Normal;
 out vec2 Uv;
 out mat3 TBN;
+out vec4 lightSpacePos;
 
 void main(){
     Position = vPos;
@@ -26,5 +30,6 @@ void main(){
         vNormal.x, vNormal.y, vNormal.z
     );
 
-    gl_Position = _Projection * _View * _Model * vec4(vPos,1);
+    gl_Position = _Projection * _View * _Model * vec4(vPos, 1);
+    lightSpacePos = lightProjection * lightView * _Model * vec4(vPos, 1);
 }
