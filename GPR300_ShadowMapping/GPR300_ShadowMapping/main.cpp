@@ -292,10 +292,10 @@ int main() {
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());
 		litShader.setMat4("_View", camera.getViewMatrix());
 		litShader.setVec3("cameraPosition", camera.getPosition());
-
 		dLight.setShaderValues(&litShader);
-
 		material.setShaderValues(&litShader);
+		litShader.setMat4("lightProjection", camera.getOrtho());
+		litShader.setMat4("lightView", glm::lookAt(dLight.getPosition(), dLight.getDirection(), glm::vec3(0, 1, 0)));
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -304,6 +304,10 @@ int main() {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 		litShader.setInt("normalMap", 1);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, depthBuffer);
+		litShader.setInt("shadowMap", 2);
 		
 		hd::drawMeshes(&litShader, "_Model", meshes, transforms, NUM_OBJECTS);
 

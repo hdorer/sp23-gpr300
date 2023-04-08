@@ -16,6 +16,9 @@ struct Material {
     float shininess;
 };
 
+const float MIN_BIAS = 0.005;
+const float MAX_BIAS = 0.015;
+
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 EffectColor;
 
@@ -23,17 +26,17 @@ in vec3 Position;
 in vec3 Normal;
 in vec2 Uv;
 in mat3 TBN;
+in vec4 lightSpacePos;
 
 uniform vec3 cameraPosition;
 
 uniform DirectionalLight dLight;
-
 uniform Material material;
 
 uniform sampler2D texture1;
 uniform sampler2D texture2;
-
 uniform sampler2D normalMap;
+uniform sampler2D shadowMap;
 
 vec4 getAmbient(float ambientLevel, vec3 color, float intensity) {
     return (vec4(material.color, 1.0) * material.ambientK) * ambientLevel * (vec4(color, 1.0) * intensity);
@@ -59,12 +62,22 @@ float linearAttenuation(float intensity, vec3 position, float minRadius, float m
     return intensity * min(max((maxRadius - distanceToLight) / (maxRadius - minRadius), 0), 1);
 }
 
+float shadow() {
+    vec3 sampleCoord = lightSpacePos.xyz / lightSpacePos.w;
+    sampleCoord = sampleCoord * 0.5 + 0.5;
+    
+    float shadowMapDepth = texture(shadowMap, sampleCoord.xy).r;
+    float depth = sampleCoord.z;
+
+    return step(shadowMapDepth, depth);
+}
+
 vec4 directionalLightLevel(DirectionalLight light, vec3 normal) {
     vec4 ambient = getAmbient(light.ambientLevel, light.color, light.intensity);
     vec4 diffuse = getDiffuse(light.position, light.direction, light.color, light.intensity, normal);
     vec4 specular = getSpecular(light.position, light.direction, light.color, light.intensity, normal);
 
-    return ambient + diffuse + specular;
+    return ambient + (diffuse + specular) * (1.0 - shadow());
 }
 
 void main(){
@@ -72,7 +85,6 @@ void main(){
     vec3 rgbNormal = texture(normalMap, Uv).rgb;
     rgbNormal = rgbNormal * 2.0 - 1.0;
     rgbNormal = normalize(TBN * rgbNormal);
-    // vec4 color = vec4(Uv.x, Uv.y, 0.0, 1.0);
 
     vec4 result = vec4(0);
 
