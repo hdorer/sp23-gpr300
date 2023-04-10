@@ -38,6 +38,9 @@ uniform sampler2D texture2;
 uniform sampler2D normalMap;
 uniform sampler2D shadowMap;
 
+uniform float minBias;
+uniform float maxBias;
+
 vec4 getAmbient(float ambientLevel, vec3 color, float intensity) {
     return (vec4(material.color, 1.0) * material.ambientK) * ambientLevel * (vec4(color, 1.0) * intensity);
 }
@@ -90,7 +93,7 @@ vec4 directionalLightLevel(DirectionalLight light, vec3 normal) {
     vec4 diffuse = getDiffuse(light.position, -light.direction, light.color, light.intensity, normal);
     vec4 specular = getSpecular(light.position, -light.direction, light.color, light.intensity, normal);
 
-    return ambient + (diffuse + specular) * (1.0 - shadow(normal, light.direction));
+    return vec4(vec3(ambient + (diffuse + specular) * (1.0 - shadow(normal, light.direction))), 1.0);
 }
 
 void main(){

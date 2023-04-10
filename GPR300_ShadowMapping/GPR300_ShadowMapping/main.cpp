@@ -279,7 +279,7 @@ int main() {
 		glViewport(0, 0, BUFFER_SIZE, BUFFER_SIZE);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowFbo);
 		glClear(GL_DEPTH_BUFFER_BIT);
-		// glCullFace(GL_FRONT);
+		glCullFace(GL_FRONT);
 
 		shadowShader.use();
 		shadowShader.setMat4("projection", lightProjection);

@@ -11,7 +11,7 @@ glm::vec3 DirectionalLight::direction() {
 DirectionalLight::DirectionalLight() {
 	transform.scale = glm::vec3(0.5f);
 	transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
-	transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+	transform.rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
 	color = glm::vec3(0.8, 1.0, 0.8);
 	intensity = 1.0;
 	ambientLevel = 0.8;
@@ -24,7 +24,7 @@ void DirectionalLight::drawGui() {
 		ImGui::Checkbox((name + " Enabled").c_str(), &enabled);
 		ImGui::ColorEdit3((name + " Color").c_str(), &color.x);
 		ImGui::DragFloat3((name + " Position").c_str(), &transform.position.x, 0.1);
-		ImGui::DragFloat3((name + " Rotation").c_str(), &transform.rotation.x, 0.1);
+		ImGui::DragFloat2((name + " Pitch/Yaw").c_str(), &transform.rotation.x, 0.1);
 		ImGui::SliderFloat((name + " Intensity").c_str(), &intensity, 0.0, 1.0);
 		ImGui::SliderFloat((name + " Ambient Level").c_str(), &ambientLevel, 0.0, 1.0);
 	}
