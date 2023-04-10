@@ -34,10 +34,6 @@ glm::vec3 DirectionalLight::getColor() {
 	return color;
 }
 
-glm::vec3 DirectionalLight::getDirection() {
-	return transform.rotation;
-}
-
 bool DirectionalLight::getEnabled() {
 	return enabled;
 }
@@ -56,9 +52,9 @@ void DirectionalLight::setName(std::string name) {
 
 void DirectionalLight::setShaderValues(Shader* shader) {
 	shader->setVec3("dLight.position", transform.position);
-	shader->setVec3("dLight.direction", transform.rotation);
+	shader->setVec3("dLight.direction", direction());
 	shader->setVec3("dLight.color", color);
-	shader->setFloat("dLight.intensity", intensity * 0.1);
+	shader->setFloat("dLight.intensity", intensity);
 	shader->setFloat("dLight.ambientLevel", ambientLevel);
 }
 

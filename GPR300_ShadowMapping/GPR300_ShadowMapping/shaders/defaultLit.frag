@@ -87,8 +87,8 @@ float shadow(vec3 normal, vec3 direction) {
 
 vec4 directionalLightLevel(DirectionalLight light, vec3 normal) {
     vec4 ambient = getAmbient(light.ambientLevel, light.color, light.intensity);
-    vec4 diffuse = getDiffuse(light.position, light.direction, light.color, light.intensity, normal);
-    vec4 specular = getSpecular(light.position, light.direction, light.color, light.intensity, normal);
+    vec4 diffuse = getDiffuse(light.position, -light.direction, light.color, light.intensity, normal);
+    vec4 specular = getSpecular(light.position, -light.direction, light.color, light.intensity, normal);
 
     return ambient + (diffuse + specular) * (1.0 - shadow(normal, light.direction));
 }

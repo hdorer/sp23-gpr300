@@ -14,7 +14,6 @@ class DirectionalLight {
 		glm::vec3 getColor();
 		bool getEnabled();
 		glm::vec3 getPosition();
-		glm::vec3 getDirection();
 
 		void setName(std::string name);
 

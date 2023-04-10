@@ -238,10 +238,13 @@ int main() {
 	glBindTexture(GL_TEXTURE_2D, depthBuffer);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, BUFFER_SIZE, BUFFER_SIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	float border[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthBuffer, 0);
 
@@ -260,10 +263,6 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClearColor(bgColor.r,bgColor.g,bgColor.b, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -273,19 +272,24 @@ int main() {
 		deltaTime = time - lastFrameTime;
 		lastFrameTime = time;
 
+		glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 15.0f);
+		glm::mat4 lightView = glm::lookAt(-dLight.direction() * 10.0f, glm::vec3(0), glm::vec3(0, 1, 0));
+
 		//Draw
 		glViewport(0, 0, BUFFER_SIZE, BUFFER_SIZE);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowFbo);
-		glCullFace(GL_FRONT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		// glCullFace(GL_FRONT);
 
 		shadowShader.use();
-		shadowShader.setMat4("projection", camera.getOrtho());
-		shadowShader.setMat4("view", glm::lookAt(dLight.getPosition(), dLight.getDirection(), glm::vec3(0, 1, 0)));
+		shadowShader.setMat4("projection", lightProjection);
+		shadowShader.setMat4("view", lightView);
 
 		hd::drawMeshes(&shadowShader, "model", meshes, transforms, NUM_OBJECTS);
 
 		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glCullFace(GL_BACK);
 
 		litShader.use();
@@ -294,8 +298,8 @@ int main() {
 		litShader.setVec3("cameraPosition", camera.getPosition());
 		dLight.setShaderValues(&litShader);
 		material.setShaderValues(&litShader);
-		litShader.setMat4("lightProjection", camera.getOrtho());
-		litShader.setMat4("lightView", glm::lookAt(dLight.getPosition(), dLight.getDirection(), glm::vec3(0, 1, 0)));
+		litShader.setMat4("lightProjection", lightProjection);
+		litShader.setMat4("lightView", lightView);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
