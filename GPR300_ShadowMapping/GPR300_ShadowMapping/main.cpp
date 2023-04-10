@@ -187,10 +187,6 @@ int main() {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, colorBuffers[i], 0);
 	}
 
-	// GLuint framebufferTexture = hd::createTexture("textures/someTexture.png", GL_TEXTURE2);
-	
-	// glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTexture, 0);
-
 	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -278,7 +274,9 @@ int main() {
 		lastFrameTime = time;
 
 		//Draw
+		glViewport(0, 0, BUFFER_SIZE, BUFFER_SIZE);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowFbo);
+		glCullFace(GL_FRONT);
 
 		shadowShader.use();
 		shadowShader.setMat4("projection", camera.getOrtho());
@@ -286,7 +284,9 @@ int main() {
 
 		hd::drawMeshes(&shadowShader, "model", meshes, transforms, NUM_OBJECTS);
 
+		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glCullFace(GL_BACK);
 
 		litShader.use();
 		litShader.setMat4("_Projection", camera.getProjectionMatrix());

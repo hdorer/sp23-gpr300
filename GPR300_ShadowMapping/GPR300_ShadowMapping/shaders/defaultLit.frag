@@ -62,14 +62,27 @@ float linearAttenuation(float intensity, vec3 position, float minRadius, float m
     return intensity * min(max((maxRadius - distanceToLight) / (maxRadius - minRadius), 0), 1);
 }
 
-float shadow() {
+float shadow(vec3 normal, vec3 direction) {
+    float totalShadow = 0;
+    vec2 texelOffset = 1.0 / textureSize(shadowMap, 0);
+
     vec3 sampleCoord = lightSpacePos.xyz / lightSpacePos.w;
     sampleCoord = sampleCoord * 0.5 + 0.5;
     
-    float shadowMapDepth = texture(shadowMap, sampleCoord.xy).r;
-    float depth = sampleCoord.z;
+    float shadowMapDepth;
+    float bias = max(MAX_BIAS * (1.0 - dot(normal, direction)), MIN_BIAS);
+    float depth = sampleCoord.z - bias;
+    
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+            shadowMapDepth = texture(shadowMap, sampleCoord.xy + vec2(x, y) * texelOffset).r;
+            totalShadow += step(shadowMapDepth, depth);
+        }
+    }
 
-    return step(shadowMapDepth, depth);
+    totalShadow /= 9.0;
+
+    return totalShadow;
 }
 
 vec4 directionalLightLevel(DirectionalLight light, vec3 normal) {
@@ -77,7 +90,7 @@ vec4 directionalLightLevel(DirectionalLight light, vec3 normal) {
     vec4 diffuse = getDiffuse(light.position, light.direction, light.color, light.intensity, normal);
     vec4 specular = getSpecular(light.position, light.direction, light.color, light.intensity, normal);
 
-    return ambient + (diffuse + specular) * (1.0 - shadow());
+    return ambient + (diffuse + specular) * (1.0 - shadow(normal, light.direction));
 }
 
 void main(){
