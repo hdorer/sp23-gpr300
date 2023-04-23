@@ -96,8 +96,8 @@ int main() {
 	//Used to draw light sphere
 	Shader unlitShader("shaders/defaultLit.vert", "shaders/unlit.frag");
 
-	Shader blurShader("shaders/gaussianBlur.vert", "shaders/gaussianBlur.frag");
-	Shader blendShader("shaders/gaussianBlur.vert", "shaders/blend.frag");
+	Shader blurShader("shaders/effect.vert", "shaders/gaussianBlur.frag");
+	Shader blendShader("shaders/effect.vert", "shaders/blend.frag");
 	Shader shadowShader("shaders/shadow.vert", "shaders/shadow.frag");
 
 	ew::MeshData cubeMeshData;
