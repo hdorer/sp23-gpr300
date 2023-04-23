@@ -200,7 +200,7 @@ int main() {
 
 	GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if(fboStatus != GL_FRAMEBUFFER_COMPLETE) {
-		std::cout << "Framebuffer error 1" << std::endl;
+		std::cout << "Framebuffer error 0" << std::endl;
 	}
 
 	unsigned int pingPongFbo[2];
@@ -221,7 +221,7 @@ int main() {
 
 		GLenum pingPongFboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if(pingPongFboStatus != GL_FRAMEBUFFER_COMPLETE) {
-			std::cout << "Framebuffer error 2" << std::endl;
+			std::cout << "Framebuffer error " << 1 + i << std::endl;
 		}
 	}
 
@@ -253,6 +253,27 @@ int main() {
 
 	GLenum shadowFboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if(shadowFboStatus != GL_FRAMEBUFFER_COMPLETE) {
+		std::cout << "Framebuffer error 2" << std::endl;
+	}
+
+	unsigned int chromaticAberrationFbo;
+	glGenFramebuffers(1, &chromaticAberrationFbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, chromaticAberrationFbo);
+
+	unsigned int chromaticAberrationBuffer;
+	glGenTextures(1, &chromaticAberrationBuffer);
+	glBindTexture(GL_TEXTURE_2D, chromaticAberrationBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, chromaticAberrationBuffer, 0);
+
+	GLenum chromaticAberrationFboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if(chromaticAberrationFboStatus != GL_FRAMEBUFFER_COMPLETE) {
 		std::cout << "Framebuffer error 3" << std::endl;
 	}
 
