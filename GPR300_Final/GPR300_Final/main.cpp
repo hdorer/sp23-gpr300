@@ -64,7 +64,7 @@ int main() {
 		return 1;
 	}
 
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Shadow Mapping", 0, 0);
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Final", 0, 0);
 	glfwMakeContextCurrent(window);
 
 	if (glewInit() != GLEW_OK) {
@@ -169,9 +169,9 @@ int main() {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-	unsigned int fbo;
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	unsigned int bloomFbo;
+	glGenFramebuffers(1, &bloomFbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, bloomFbo);
 
 	unsigned int colorBuffers[2];
 	glGenTextures(2, colorBuffers);
@@ -288,7 +288,7 @@ int main() {
 		hd::drawMeshes(&shadowShader, "model", meshes, transforms, NUM_OBJECTS);
 
 		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomFbo);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glCullFace(GL_BACK);
 
@@ -323,8 +323,6 @@ int main() {
 		unlitShader.setVec3("_Color", lightColor);
 		sphereMesh.draw();
 
-		/*
-		uncommenting this leads to a black screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		bool horizontal = true;
@@ -368,7 +366,7 @@ int main() {
 		
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);*/
+		glBindVertexArray(0);
 
 		//Draw UI
 		ImGui::Begin("Settings");
