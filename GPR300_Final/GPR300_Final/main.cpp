@@ -376,20 +376,20 @@ int main() {
 			firstIteration = false;
 		}
 		
-		glBindFramebuffer(GL_FRAMEBUFFER, chromaticAberrationBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, chromaticAberrationFbo);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		blendShader.use();
-		blendShader.setInt("scene", 0);
-		blendShader.setInt("blur", 1);
-		blendShader.setInt("bloom", bloom);
-		blendShader.setFloat("exposure", exposure);
 		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, colorBuffers[0]);
 		
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pingPongBuffer[!horizontal]);
+
+		blendShader.use();
+		blendShader.setInt("scene", 0);
+		blendShader.setInt("blur", 1);
+		blendShader.setInt("bloom", bloom);
+		blendShader.setFloat("exposure", exposure);
 		
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -398,15 +398,15 @@ int main() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, chromaticAberrationBuffer);
+
 		chromaticAberrationShader.use();
 		chromaticAberrationShader.setInt("sceneTexture", 0);
 		chromaticAberrationShader.setFloat("rOffset", caROffset);
 		chromaticAberrationShader.setFloat("gOffset", caGOffset);
 		chromaticAberrationShader.setFloat("bOffset", caBOffset);
 		chromaticAberrationShader.setInt("enabled", chromaticAberration);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, chromaticAberrationBuffer);
 
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
