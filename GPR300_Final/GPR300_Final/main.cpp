@@ -99,6 +99,7 @@ int main() {
 	Shader blurShader("shaders/effect.vert", "shaders/gaussianBlur.frag");
 	Shader blendShader("shaders/effect.vert", "shaders/blend.frag");
 	Shader shadowShader("shaders/shadow.vert", "shaders/shadow.frag");
+	Shader chromaticAberrationShader("shaders/effect.vert", "shaders/chromaticAberration.frag");
 
 	ew::MeshData cubeMeshData;
 	ew::createCube(1.0f, 1.0f, 1.0f, cubeMeshData);
@@ -256,6 +257,12 @@ int main() {
 		std::cout << "Framebuffer error 2" << std::endl;
 	}
 
+	bool chromaticAberration = false;
+	float caROffset = 0.009;
+	float caGOffset = 0.006;
+	float caBOffset = -0.006;
+	glm::vec2 caFocusPoint(0.5f, 0.5f);
+
 	unsigned int chromaticAberrationFbo;
 	glGenFramebuffers(1, &chromaticAberrationFbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, chromaticAberrationFbo);
@@ -368,13 +375,15 @@ int main() {
 			horizontal = !horizontal;
 			firstIteration = false;
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, chromaticAberrationBuffer);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		blendShader.use();
 		blendShader.setInt("scene", 0);
 		blendShader.setInt("blur", 1);
+		blendShader.setInt("bloom", bloom);
+		blendShader.setFloat("exposure", exposure);
 		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, colorBuffers[0]);
@@ -382,9 +391,23 @@ int main() {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pingPongBuffer[!horizontal]);
 		
-		blendShader.setInt("bloom", bloom);
-		blendShader.setFloat("exposure", exposure);
-		
+		glBindVertexArray(quadVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		chromaticAberrationShader.use();
+		chromaticAberrationShader.setInt("sceneTexture", 0);
+		chromaticAberrationShader.setFloat("rOffset", caROffset);
+		chromaticAberrationShader.setFloat("gOffset", caGOffset);
+		chromaticAberrationShader.setFloat("bOffset", caBOffset);
+		chromaticAberrationShader.setInt("enabled", chromaticAberration);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, chromaticAberrationBuffer);
+
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
