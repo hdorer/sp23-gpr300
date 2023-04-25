@@ -257,10 +257,8 @@ int main() {
 		std::cout << "Framebuffer error 2" << std::endl;
 	}
 
-	bool chromaticAberration = false;
-	float caROffset = 0.009;
-	float caGOffset = 0.006;
-	float caBOffset = -0.006;
+	bool chromaticAberration = true;
+	glm::vec3 caColorOffsets(0.009, 0.006, -0.006);
 	glm::vec2 caFocusPoint(0.5f, 0.5f);
 
 	unsigned int chromaticAberrationFbo;
@@ -403,9 +401,7 @@ int main() {
 
 		chromaticAberrationShader.use();
 		chromaticAberrationShader.setInt("sceneTexture", 0);
-		chromaticAberrationShader.setFloat("rOffset", caROffset);
-		chromaticAberrationShader.setFloat("gOffset", caGOffset);
-		chromaticAberrationShader.setFloat("bOffset", caBOffset);
+		chromaticAberrationShader.setVec3("colorOffsets", caColorOffsets);
 		chromaticAberrationShader.setInt("enabled", chromaticAberration);
 
 		glBindVertexArray(quadVAO);
@@ -420,6 +416,12 @@ int main() {
 		if(ImGui::CollapsingHeader("Bloom Settings")) {
 			ImGui::Checkbox("Enabled", &bloom);
 			ImGui::DragFloat("Exposure", &exposure, 0.01f, 0.0f, FLT_MAX);
+		}
+
+		if(ImGui::CollapsingHeader("Chromatic Aberration Settings")) {
+			ImGui::Checkbox("Enabled", &chromaticAberration);
+			ImGui::DragFloat3("Color Offsets", &caColorOffsets.r, 0.001f, -1.0f, 1.0f);
+			ImGui::DragFloat2("Focus Point", &caFocusPoint.x, 0.01f, 0.0f, 1.0f);
 		}
 		
 		ImGui::End();
