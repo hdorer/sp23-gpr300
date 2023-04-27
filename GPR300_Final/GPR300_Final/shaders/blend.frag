@@ -15,13 +15,14 @@ void main() {
 
 	vec3 color = texture(scene, Uv).rgb;
 	vec3 bloomColor = texture(blur, Uv).rgb;
+	vec3 result = color;
 	
 	if(bloom) {
 		color += bloomColor;
-	}
 
-	vec3 result = vec3(1.0) - exp(-color * exposure);
-	result = pow(result, vec3(1.0 / gamma));
+		result = vec3(1.0) - exp(-color * exposure);
+		result = pow(result, vec3(1.0 / gamma));
+	}
 
 	FragColor = vec4(result, 1.0);
 }
