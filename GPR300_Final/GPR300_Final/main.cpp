@@ -259,7 +259,9 @@ int main() {
 	}
 
 	bool chromaticAberration = true;
-	glm::vec3 caColorOffsets(0.009, 0.006, -0.006);
+	glm::vec2 caROffset(0.009);
+	glm::vec2 caGOffset(0.006);
+	glm::vec2 caBOffset(-0.006);
 	glm::vec2 caFocusPoint(0.5f, 0.5f);
 	bool caShowFocusPoint = false;
 
@@ -404,7 +406,9 @@ int main() {
 
 		chromaticAberrationShader.use();
 		chromaticAberrationShader.setInt("sceneTexture", 0);
-		chromaticAberrationShader.setVec3("colorOffsets", caColorOffsets);
+		chromaticAberrationShader.setVec2("rOffset", caROffset);
+		chromaticAberrationShader.setVec2("gOffset", caGOffset);
+		chromaticAberrationShader.setVec2("bOffset", caBOffset);
 		chromaticAberrationShader.setVec2("focusPoint", caFocusPoint);
 		chromaticAberrationShader.setInt("enabled", chromaticAberration);
 		chromaticAberrationShader.setInt("showFocusPoint", caShowFocusPoint);
@@ -426,7 +430,9 @@ int main() {
 
 		if(ImGui::CollapsingHeader("Chromatic Aberration Settings")) {
 			ImGui::Checkbox("Enabled", &chromaticAberration);
-			ImGui::DragFloat3("Color Offsets", &caColorOffsets.r, 0.001f, -1.0f, 1.0f);
+			ImGui::DragFloat2("Red Channel Offset", &caROffset.x, 0.001f, -1.0f, 1.0f);
+			ImGui::DragFloat2("Green Channel Offset", &caGOffset.x, 0.001f, -1.0f, 1.0f);
+			ImGui::DragFloat2("Blue Channel Offset", &caBOffset.x, 0.001f, -1.0f, 1.0f);
 			ImGui::DragFloat2("Focus Point", &caFocusPoint.x, 0.01f, 0.0f, 1.0f);
 			ImGui::Checkbox("Show Focus Point", &caShowFocusPoint);
 		}

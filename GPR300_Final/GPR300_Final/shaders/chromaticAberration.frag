@@ -4,7 +4,9 @@ out vec4 FragColor;
 
 uniform sampler2D sceneTexture;
 
-uniform vec3 colorOffsets;
+uniform vec2 rOffset;
+uniform vec2 gOffset;
+uniform vec2 bOffset;
 
 uniform vec2 focusPoint;
 
@@ -23,9 +25,9 @@ void main() {
 		if(showFocusPoint && length(texCoords - focusPoint) <= 0.003) {
 			result = vec3(1.0, 0.0, 0.0);
 		} else {
-			result.r = texture(sceneTexture, texCoords + (direction * vec2(colorOffsets.r))).r;
-			result.g = texture(sceneTexture, texCoords + (direction * vec2(colorOffsets.g))).g;
-			result.b = texture(sceneTexture, texCoords + (direction * vec2(colorOffsets.b))).b;
+			result.r = texture(sceneTexture, texCoords + (direction * rOffset)).r;
+			result.g = texture(sceneTexture, texCoords + (direction * gOffset)).g;
+			result.b = texture(sceneTexture, texCoords + (direction * bOffset)).b;
 		}
 	}
 
