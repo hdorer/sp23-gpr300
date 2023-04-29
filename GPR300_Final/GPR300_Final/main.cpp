@@ -258,7 +258,7 @@ int main() {
 		std::cout << "Framebuffer error 2" << std::endl;
 	}
 
-	bool chromaticAberration = true;
+	bool chromaticAberration = false;
 	glm::vec2 caROffset(0.09);
 	glm::vec2 caGOffset(0.06);
 	glm::vec2 caBOffset(-0.06);
