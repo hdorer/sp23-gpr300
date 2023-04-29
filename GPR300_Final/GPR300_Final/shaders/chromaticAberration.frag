@@ -2,6 +2,8 @@
 
 out vec4 FragColor;
 
+const float FOCUS_POINT_INDICATOR_RADIUS = 0.003;
+
 uniform sampler2D sceneTexture;
 
 uniform vec2 rOffset;
@@ -22,7 +24,7 @@ void main() {
 	vec3 result = texture(sceneTexture, texCoords).rgb;
 
 	if(enabled) {
-		if(showFocusPoint && length(texCoords - focusPoint) <= 0.003) {
+		if(showFocusPoint && length(texCoords - focusPoint) <= FOCUS_POINT_INDICATOR_RADIUS) {
 			result = vec3(1.0, 0.0, 0.0);
 		} else {
 			result.r = texture(sceneTexture, texCoords + (direction * rOffset)).r;
