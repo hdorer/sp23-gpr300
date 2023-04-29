@@ -259,11 +259,12 @@ int main() {
 	}
 
 	bool chromaticAberration = true;
-	glm::vec2 caROffset(0.009);
-	glm::vec2 caGOffset(0.006);
-	glm::vec2 caBOffset(-0.006);
+	glm::vec2 caROffset(0.09);
+	glm::vec2 caGOffset(0.06);
+	glm::vec2 caBOffset(-0.06);
 	glm::vec2 caFocusPoint(0.5f, 0.5f);
 	bool caShowFocusPoint = false;
+	bool caIntenseMode = false;
 
 	unsigned int chromaticAberrationFbo;
 	glGenFramebuffers(1, &chromaticAberrationFbo);
@@ -412,6 +413,7 @@ int main() {
 		chromaticAberrationShader.setVec2("focusPoint", caFocusPoint);
 		chromaticAberrationShader.setInt("enabled", chromaticAberration);
 		chromaticAberrationShader.setInt("showFocusPoint", caShowFocusPoint);
+		chromaticAberrationShader.setFloat("intensityModifier", caIntenseMode ? 1.0 : 0.1);
 
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -435,6 +437,7 @@ int main() {
 			ImGui::DragFloat2("Blue Channel Offset", &caBOffset.x, 0.001f, -1.0f, 1.0f);
 			ImGui::DragFloat2("Focus Point", &caFocusPoint.x, 0.01f, 0.0f, 1.0f);
 			ImGui::Checkbox("Show Focus Point", &caShowFocusPoint);
+			ImGui::Checkbox("Intense Mode", &caIntenseMode);
 		}
 		
 		ImGui::End();
