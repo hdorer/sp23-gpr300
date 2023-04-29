@@ -9,10 +9,9 @@ uniform sampler2D blur;
 
 uniform bool bloom;
 uniform float exposure;
+uniform float gamma;
 
 void main() {
-	const float gamma = 2.2;
-
 	vec3 color = texture(scene, Uv).rgb;
 	vec3 bloomColor = texture(blur, Uv).rgb;
 	vec3 result = color;

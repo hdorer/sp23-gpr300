@@ -228,6 +228,7 @@ int main() {
 
 	bool bloom = false;
 	float bExposure = 0.5f;
+	float bGamma = 2.2f;
 	
 	const int BUFFER_SIZE = 1024;
 	unsigned int shadowFbo;
@@ -389,6 +390,7 @@ int main() {
 		blendShader.setInt("blur", 1);
 		blendShader.setInt("bloom", bloom);
 		blendShader.setFloat("exposure", bExposure);
+		blendShader.setFloat("gamma", bGamma);
 		
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -419,6 +421,7 @@ int main() {
 		if(ImGui::CollapsingHeader("Bloom Settings")) {
 			ImGui::Checkbox("Enabled", &bloom);
 			ImGui::DragFloat("Exposure", &bExposure, 0.01f, 0.0f, FLT_MAX);
+			ImGui::DragFloat("Gamma", &bGamma, 0.01f, 0.0f, FLT_MAX);
 		}
 
 		if(ImGui::CollapsingHeader("Chromatic Aberration Settings")) {
