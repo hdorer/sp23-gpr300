@@ -4,6 +4,8 @@ out vec4 FragColor;
 
 const float FOCUS_POINT_INDICATOR_RADIUS = 0.003;
 
+// Code adapted from https://lettier.github.io/3d-game-shaders-for-beginners/chromatic-aberration.html
+
 uniform sampler2D sceneTexture;
 
 uniform vec2 rOffset;

@@ -1,3 +1,5 @@
+// Code adapted from Learn OpenGL article on bloom: https://learnopengl.com/Advanced-Lighting/Bloom
+
 #version 450
 
 out vec4 FragColor;

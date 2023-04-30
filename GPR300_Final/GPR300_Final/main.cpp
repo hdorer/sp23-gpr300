@@ -1,3 +1,6 @@
+// Bloom code adapted from Learn OpenGL article on bloom: https://learnopengl.com/Advanced-Lighting/Bloom
+// Chromatic aberration code adapted from https://lettier.github.io/3d-game-shaders-for-beginners/chromatic-aberration.html
+
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
@@ -387,6 +390,7 @@ int main() {
 			horizontal = !horizontal;
 		}
 		
+		// Draw scene to final FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, chromaticAberrationFbo);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -407,6 +411,7 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
+		// Apply chromatic aberration effect and draw result to screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
