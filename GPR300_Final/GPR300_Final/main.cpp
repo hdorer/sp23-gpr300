@@ -170,10 +170,12 @@ int main() {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
+	// final effect FBO
 	unsigned int bloomFbo;
 	glGenFramebuffers(1, &bloomFbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, bloomFbo);
 
+	// two color buffers
 	unsigned int colorBuffers[2];
 	glGenTextures(2, colorBuffers);
 	for(int i = 0; i < 2; i++) {
@@ -204,7 +206,8 @@ int main() {
 		std::cout << "Framebuffer error 0" << std::endl;
 	}
 
-	unsigned int pingPongFbo[2];
+	// FBOs and color buffers for gaussian blur
+	unsigned int pingPongFbo[2]; 
 	unsigned int pingPongBuffer[2];
 	glGenFramebuffers(2, pingPongFbo);
 	glGenTextures(2, pingPongBuffer);
@@ -231,6 +234,7 @@ int main() {
 	float bGamma = 2.2f;
 	float bBlurWeights[4] = { 0.227027, 0.1945946, 0.1216126, 0.054054 };
 	float bBlurStrength = 1.0f;
+	int bPingPongCount = 10;
 	
 	const int BUFFER_SIZE = 1024;
 	unsigned int shadowFbo;
@@ -358,8 +362,8 @@ int main() {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		// perform Gaussian blur on the scene image
 		bool horizontal = true;
-		bool firstIteration = true;
 		int amount = 10;
 
 		blurShader.use();
@@ -374,14 +378,13 @@ int main() {
 			}
 			
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, firstIteration ? colorBuffers[1] : colorBuffers[horizontal]);
+			glBindTexture(GL_TEXTURE_2D, colorBuffers[horizontal]);
 			
 			glBindVertexArray(quadVAO);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 			glBindVertexArray(0);
 			
 			horizontal = !horizontal;
-			firstIteration = false;
 		}
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, chromaticAberrationFbo);
