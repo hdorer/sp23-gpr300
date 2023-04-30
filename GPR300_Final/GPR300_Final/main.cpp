@@ -229,6 +229,8 @@ int main() {
 	bool bloom = false;
 	float bExposure = 0.5f;
 	float bGamma = 2.2f;
+	float bBlurWeights[4] = { 0.227027, 0.1945946, 0.1216126, 0.054054 };
+	float bBlurStrength = 1.0f;
 	
 	const int BUFFER_SIZE = 1024;
 	unsigned int shadowFbo;
@@ -367,6 +369,9 @@ int main() {
 			glBindFramebuffer(GL_FRAMEBUFFER, pingPongFbo[horizontal]);
 			
 			blurShader.setInt("horizontal", horizontal ? 1 : 0);
+			for(int i = 0; i < 4; i++) {
+				blurShader.setFloat("weight[" + std::to_string(i) + "]", bBlurWeights[i] * bBlurStrength);
+			}
 			
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, firstIteration ? colorBuffers[1] : colorBuffers[horizontal]);
@@ -426,6 +431,7 @@ int main() {
 
 		if(ImGui::CollapsingHeader("Bloom Settings")) {
 			ImGui::Checkbox("Enabled", &bloom);
+			ImGui::DragFloat("Blur Strength", &bBlurStrength, 0.01f, 0.0f, FLT_MAX);
 			ImGui::DragFloat("Exposure", &bExposure, 0.01f, 0.0f, FLT_MAX);
 			ImGui::DragFloat("Gamma", &bGamma, 0.01f, 0.0f, FLT_MAX);
 		}

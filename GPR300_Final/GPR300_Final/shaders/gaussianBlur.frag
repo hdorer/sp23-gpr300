@@ -7,7 +7,7 @@ in vec2 Uv;
 uniform sampler2D image;
 
 uniform bool horizontal;
-uniform float[] weight = float[]( 0.227027, 0.1945946, 0.1216126, 0.054054 );
+uniform float weight[4];
 
 void main() {
 	vec2 texOffset = 1.0 / textureSize(image, 0);
